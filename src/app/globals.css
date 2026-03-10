@@ -2,50 +2,51 @@
 
 /* ============================================
    Anshin Zaiko - Design System
+   やわらかく親しみやすいトーン
    ============================================ */
 
 @theme {
-  /* Brand Colors */
-  --color-brand-orange: #F97316;
-  --color-brand-orange-light: #FDBA74;
-  --color-brand-orange-dark: #EA580C;
-  --color-brand-green: #22C55E;
-  --color-brand-green-light: #86EFAC;
-  --color-brand-green-dark: #16A34A;
+  /* Brand Colors - やさしいオレンジ系 */
+  --color-brand-orange: #F59E42;
+  --color-brand-orange-light: #FDE1B0;
+  --color-brand-orange-dark: #E67E22;
+  --color-brand-green: #5EC87E;
+  --color-brand-green-light: #B6ECC8;
+  --color-brand-green-dark: #38A85C;
 
-  /* Neutral */
+  /* Neutral - やわらかいベース */
   --color-surface: #FFFFFF;
-  --color-surface-dim: #F8FAFC;
-  --color-surface-dark: #1E293B;
-  --color-surface-darker: #0F172A;
-  --color-border: #E2E8F0;
-  --color-border-dark: #334155;
+  --color-surface-dim: #FDF8F3;
+  --color-surface-dark: #3D3A4F;
+  --color-surface-darker: #2D2A3E;
+  --color-border: #F0E6DB;
+  --color-border-dark: #4A4660;
 
-  /* Text */
-  --color-text-primary: #0F172A;
-  --color-text-secondary: #64748B;
-  --color-text-muted: #94A3B8;
+  /* Text - やさしい色合い */
+  --color-text-primary: #3D3A4F;
+  --color-text-secondary: #8B8499;
+  --color-text-muted: #B5AECC;
   --color-text-on-brand: #FFFFFF;
 
   /* Status */
-  --color-danger: #EF4444;
-  --color-warning: #F59E0B;
-  --color-success: #22C55E;
-  --color-info: #3B82F6;
+  --color-danger: #F0736C;
+  --color-warning: #F5B74E;
+  --color-success: #5EC87E;
+  --color-info: #6DAAEE;
 
-  /* Shadows */
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
-  --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
-  --shadow-modal: 0 20px 60px rgba(0, 0, 0, 0.15);
+  /* Shadows - ふんわり */
+  --shadow-card: 0 2px 8px rgba(178, 160, 140, 0.08), 0 1px 3px rgba(178, 160, 140, 0.06);
+  --shadow-card-hover: 0 6px 20px rgba(178, 160, 140, 0.12), 0 2px 6px rgba(178, 160, 140, 0.06);
+  --shadow-modal: 0 20px 60px rgba(100, 80, 60, 0.12);
 
-  /* Radii */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  /* Radii - まるみ */
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 28px;
   --radius-full: 9999px;
 
-  /* Fonts */
+  /* Fonts - やわらかいフォント */
   --font-sans: 'Noto Sans JP', system-ui, -apple-system, sans-serif;
 }
 
@@ -66,9 +67,10 @@ body {
   font-family: var(--font-sans);
   color: var(--color-text-primary);
   background-color: var(--color-surface-dim);
-  line-height: 1.6;
+  line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  letter-spacing: 0.02em;
 }
 
 /* ============================================
@@ -77,17 +79,17 @@ body {
 
 /* Glass effect */
 .glass {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .glass-dark {
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(51, 65, 85, 0.5);
+  background: rgba(45, 42, 62, 0.88);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(74, 70, 96, 0.5);
 }
 
 /* Gradient backgrounds */
@@ -96,7 +98,7 @@ body {
 }
 
 .bg-gradient-hero {
-  background: linear-gradient(135deg, #1E293B 0%, #334155 50%, #1E293B 100%);
+  background: linear-gradient(135deg, #3D3A4F 0%, #5C5878 50%, #3D3A4F 100%);
 }
 
 /* Card styles */
@@ -105,7 +107,7 @@ body {
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   border: 1px solid var(--color-border);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
 }
 
 .card:hover {
@@ -122,7 +124,7 @@ body {
   border-radius: var(--radius-md);
   font-weight: 600;
   font-size: 0.875rem;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
   cursor: pointer;
   border: none;
   outline: none;
@@ -136,10 +138,12 @@ body {
 .btn-primary {
   background: linear-gradient(135deg, var(--color-brand-orange), var(--color-brand-orange-dark));
   color: var(--color-text-on-brand);
+  box-shadow: 0 2px 8px rgba(245, 158, 66, 0.25);
 }
 
 .btn-primary:hover {
-  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+  box-shadow: 0 4px 16px rgba(245, 158, 66, 0.35);
+  transform: translateY(-1px);
 }
 
 .btn-secondary {
@@ -158,7 +162,7 @@ body {
 }
 
 .btn-danger {
-  background: linear-gradient(135deg, var(--color-danger), #DC2626);
+  background: linear-gradient(135deg, var(--color-danger), #E05A54);
   color: var(--color-text-on-brand);
 }
 
@@ -167,17 +171,17 @@ body {
   width: 100%;
   padding: 0.625rem 0.875rem;
   border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
+  border: 1.5px solid var(--color-border);
   background: var(--color-surface);
   font-size: 1rem;
   color: var(--color-text-primary);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   outline: none;
 }
 
 .input:focus {
   border-color: var(--color-brand-orange);
-  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+  box-shadow: 0 0 0 3px rgba(245, 158, 66, 0.12);
 }
 
 .input::placeholder {
@@ -188,25 +192,25 @@ body {
 .badge {
   display: inline-flex;
   align-items: center;
-  padding: 0.125rem 0.5rem;
+  padding: 0.2rem 0.6rem;
   border-radius: var(--radius-full);
   font-size: 0.75rem;
   font-weight: 600;
 }
 
 .badge-warning {
-  background: #FEF3C7;
-  color: #92400E;
+  background: #FFF5DC;
+  color: #A06B10;
 }
 
 .badge-danger {
-  background: #FEE2E2;
-  color: #991B1B;
+  background: #FEEAEA;
+  color: #B4403A;
 }
 
 .badge-success {
-  background: #D1FAE5;
-  color: #065F46;
+  background: #E6F9ED;
+  color: #2E7D4E;
 }
 
 /* ============================================
@@ -228,7 +232,7 @@ body {
   border-radius: var(--radius-lg);
   font-size: 1.25rem;
   font-weight: 700;
-  transition: all 0.1s ease;
+  transition: all 0.15s ease;
   user-select: none;
   -webkit-user-select: none;
   cursor: pointer;
@@ -240,18 +244,18 @@ body {
 }
 
 .numpad-minus {
-  background: linear-gradient(135deg, #FEE2E2, #FECACA);
-  color: #DC2626;
+  background: linear-gradient(135deg, #FFF0F0, #FFD6D6);
+  color: #E05555;
 }
 
 .numpad-plus {
-  background: linear-gradient(135deg, #D1FAE5, #A7F3D0);
-  color: #059669;
+  background: linear-gradient(135deg, #E6F9ED, #C4EDCF);
+  color: #2E8E55;
 }
 
 .numpad-plus-ten {
-  background: linear-gradient(135deg, #DBEAFE, #BFDBFE);
-  color: #1D4ED8;
+  background: linear-gradient(135deg, #E8F0FE, #CDE0FF);
+  color: #3B6FD8;
 }
 
 .numpad-plenty {
@@ -271,7 +275,7 @@ body {
   background: var(--color-surface);
   border: 2px solid var(--color-border);
   color: var(--color-text-primary);
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
   cursor: pointer;
   user-select: none;
 }
@@ -279,7 +283,7 @@ body {
 .staff-name-btn:active {
   transform: scale(0.96);
   border-color: var(--color-brand-orange);
-  background: #FFF7ED;
+  background: #FFF9F0;
 }
 
 /* ============================================
@@ -329,7 +333,7 @@ body {
   color: var(--color-text-muted);
   font-size: 0.875rem;
   font-weight: 500;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
   text-decoration: none;
 }
 
@@ -339,7 +343,7 @@ body {
 }
 
 .sidebar-link.active {
-  background: rgba(249, 115, 22, 0.15);
+  background: rgba(245, 158, 66, 0.15);
   color: var(--color-brand-orange);
 }
 

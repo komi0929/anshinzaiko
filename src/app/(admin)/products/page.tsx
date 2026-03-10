@@ -138,9 +138,9 @@ export default function ProductsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-extrabold">商品マスター</h1>
+          <h1 className="text-3xl font-extrabold">商品メニュー 🍰</h1>
           <p className="text-[var(--color-text-secondary)] mt-1">
-            {products.length}件の商品 • レシピ構成から原価を自動計算
+            {products.length}件の商品があります • レシピから原価を自動で計算します
           </p>
         </div>
         <button
@@ -148,7 +148,7 @@ export default function ProductsPage() {
           className="btn btn-primary"
         >
           <Plus className="w-4 h-4" />
-          商品を追加
+          商品をついか
         </button>
       </div>
 
@@ -174,7 +174,7 @@ export default function ProductsPage() {
                   <div>
                     <h3 className="font-bold">{prod.name}</h3>
                     <p className="text-xs text-[var(--color-text-secondary)]">
-                      売価 ¥{Number(prod.selling_price).toLocaleString()} • 原価率 {Number(prod.cost_ratio).toFixed(1)}%
+                      売値 ¥{Number(prod.selling_price).toLocaleString()} • 原価率 {Number(prod.cost_ratio).toFixed(1)}%
                     </p>
                   </div>
                 </div>
@@ -184,7 +184,7 @@ export default function ProductsPage() {
           ))}
           {products.length === 0 && (
             <div className="card p-8 text-center text-[var(--color-text-muted)]">
-              商品がまだありません
+              まだ商品がありません ✨
             </div>
           )}
         </div>
@@ -197,7 +197,7 @@ export default function ProductsPage() {
                 <div>
                   <h2 className="text-2xl font-bold">{selectedProductData.name}</h2>
                   <p className="text-[var(--color-text-secondary)]">
-                    レシピ構成と原価
+                    レシピのなかみと原価
                   </p>
                 </div>
                 <button
@@ -212,7 +212,7 @@ export default function ProductsPage() {
               {/* Cost summary */}
               <div className="grid grid-cols-3 gap-4">
                 <div className="p-4 bg-[var(--color-surface-dim)] rounded-xl">
-                  <p className="text-xs text-[var(--color-text-muted)] mb-1">売価</p>
+                  <p className="text-xs text-[var(--color-text-muted)] mb-1">売値</p>
                   <p className="text-xl font-extrabold">¥{Number(selectedProductData.selling_price).toLocaleString()}</p>
                 </div>
                 <div className="p-4 bg-orange-50 rounded-xl">
@@ -236,20 +236,20 @@ export default function ProductsPage() {
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-bold flex items-center gap-2">
                     <Layers className="w-4 h-4" />
-                    レシピ構成
+                    レシピのなかみ
                   </h3>
                   <button
                     onClick={() => setShowAddRecipeItem(true)}
                     className="btn btn-secondary text-sm"
                   >
                     <Plus className="w-4 h-4" />
-                    構成要素を追加
+                    材料をついか
                   </button>
                 </div>
 
                 {recipeItems.length === 0 ? (
                   <div className="p-6 bg-[var(--color-surface-dim)] rounded-xl text-center text-[var(--color-text-muted)]">
-                    レシピ構成要素がまだありません
+                    まだレシピに材料がありません
                   </div>
                 ) : (
                   <div className="space-y-2">
@@ -269,7 +269,7 @@ export default function ProductsPage() {
                               {item.material?.name || item.sub_product?.name || "不明"}
                             </p>
                             <p className="text-xs text-[var(--color-text-muted)]">
-                              使用量: {item.quantity}{item.material ? item.material.unit : "割合"}
+                              つかう量: {item.quantity}{item.material ? item.material.unit : "割合"}
                               {item.material && (
                                 <span className="ml-2">
                                   (¥{(Number(item.material.unit_cost) * item.quantity).toFixed(2)})
@@ -317,7 +317,7 @@ export default function ProductsPage() {
                             onClick={() => { setAddType("product"); setAddRefId(""); }}
                             className={`btn text-sm ${addType === "product" ? "btn-primary" : "btn-secondary"}`}
                           >
-                            既存商品
+                            ほかの商品
                           </button>
                         </div>
                       </div>
@@ -328,7 +328,7 @@ export default function ProductsPage() {
                             value={addRefId}
                             onChange={(e) => setAddRefId(e.target.value)}
                           >
-                            <option value="">選択してください</option>
+                            <option value="">えらんでください</option>
                             {addType === "material"
                               ? materials.map((m) => (
                                   <option key={m.id} value={m.id}>
@@ -348,7 +348,7 @@ export default function ProductsPage() {
                           <input
                             type="number"
                             className="input"
-                            placeholder={addType === "material" ? "使用量" : "割合 (0.5=半分)"}
+                            placeholder={addType === "material" ? "つかう量" : "割合 (0.5=半分)"}
                             value={addQuantity}
                             onChange={(e) => setAddQuantity(Number(e.target.value))}
                             step="0.1"
@@ -360,14 +360,14 @@ export default function ProductsPage() {
                           onClick={() => setShowAddRecipeItem(false)}
                           className="btn btn-secondary text-sm"
                         >
-                          キャンセル
+                          やめる
                         </button>
                         <button
                           onClick={handleAddRecipeItem}
                           disabled={saving || !addRefId}
                           className="btn btn-primary text-sm"
                         >
-                          {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : "追加"}
+                          {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : "ついか"}
                         </button>
                       </div>
                     </div>
@@ -378,7 +378,7 @@ export default function ProductsPage() {
           ) : (
             <div className="card p-12 text-center text-[var(--color-text-muted)]">
               <Layers className="w-12 h-12 mx-auto mb-3 opacity-30" />
-              <p>左のリストから商品を選択してレシピを編集</p>
+              <p>左の一覧から商品をえらんで、レシピを見てみましょう♪</p>
             </div>
           )}
         </div>
@@ -402,23 +402,23 @@ export default function ProductsPage() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between p-6 border-b border-[var(--color-border)]">
-                <h2 className="text-xl font-bold">商品を追加</h2>
+                <h2 className="text-xl font-bold">商品をついか ✨</h2>
                 <button onClick={() => setShowAddModal(false)} className="p-2 rounded-lg hover:bg-gray-100">
                   <X className="w-5 h-5" />
                 </button>
               </div>
               <div className="p-6 space-y-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1.5">商品名 *</label>
+                  <label className="block text-sm font-medium mb-1.5">商品の名前 *</label>
                   <input
                     className="input"
-                    placeholder="例: ソフトクリームワッフル"
+                    placeholder="例: チーズケーキ"
                     value={newProductName}
                     onChange={(e) => setNewProductName(e.target.value)}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1.5">売価</label>
+                  <label className="block text-sm font-medium mb-1.5">売値</label>
                   <input
                     type="number"
                     className="input"
@@ -428,13 +428,13 @@ export default function ProductsPage() {
                 </div>
               </div>
               <div className="flex justify-end gap-3 p-6 border-t border-[var(--color-border)]">
-                <button onClick={() => setShowAddModal(false)} className="btn btn-secondary">キャンセル</button>
+                <button onClick={() => setShowAddModal(false)} className="btn btn-secondary">やめる</button>
                 <button
                   onClick={handleCreateProduct}
                   disabled={saving || !newProductName}
                   className="btn btn-primary"
                 >
-                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : "追加"}
+                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : "ついかする"}
                 </button>
               </div>
             </motion.div>

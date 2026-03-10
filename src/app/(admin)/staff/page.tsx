@@ -46,9 +46,9 @@ export default function StaffPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-extrabold">スタッフ管理</h1>
+        <h1 className="text-3xl font-extrabold">スタッフ 👩‍🍳</h1>
         <p className="text-[var(--color-text-secondary)] mt-1">
-          在庫入力画面に表示されるスタッフ名を管理します
+          ここで登録した名前が、スタッフさんの入力画面に出ます
         </p>
       </div>
 
@@ -57,7 +57,7 @@ export default function StaffPage() {
         <div className="flex items-center gap-3">
           <input
             className="input flex-1"
-            placeholder="スタッフ名を入力..."
+            placeholder="スタッフの名前を入れてね..."
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleAdd()}
@@ -68,7 +68,7 @@ export default function StaffPage() {
             className="btn btn-primary"
           >
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
-            追加
+            ついか
           </button>
         </div>
       </div>
@@ -99,7 +99,7 @@ export default function StaffPage() {
         ))}
         {staff.length === 0 && (
           <div className="card p-8 text-center text-[var(--color-text-muted)]">
-            スタッフがまだ登録されていません
+            まだスタッフが登録されていません 🙋‍♀️
           </div>
         )}
       </div>

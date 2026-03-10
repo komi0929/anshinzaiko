@@ -16,12 +16,12 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 
 const navItems = [
-  { href: "/dashboard", label: "ダッシュボード", icon: LayoutDashboard },
-  { href: "/materials", label: "材料マスター", icon: Package },
-  { href: "/products", label: "商品マスター", icon: ShoppingCart },
-  { href: "/staff", label: "スタッフ管理", icon: Users },
+  { href: "/dashboard", label: "ホーム", icon: LayoutDashboard },
+  { href: "/materials", label: "材料リスト", icon: Package },
+  { href: "/products", label: "商品メニュー", icon: ShoppingCart },
+  { href: "/staff", label: "スタッフ", icon: Users },
   { href: "/locations", label: "保管場所", icon: MapPin },
-  { href: "/settings", label: "店舗設定", icon: Settings },
+  { href: "/settings", label: "お店の設定", icon: Settings },
 ];
 
 export default function AdminLayout({
@@ -45,12 +45,12 @@ export default function AdminLayout({
         {/* Logo */}
         <div className="p-6 border-b border-[var(--color-border-dark)]">
           <Link href="/dashboard" className="flex items-center gap-3 no-underline">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--color-brand-orange)] to-[var(--color-brand-orange-dark)] flex items-center justify-center">
               <ChefHat className="w-6 h-6 text-white" />
             </div>
             <div>
               <h1 className="text-white font-bold text-lg leading-tight">あんしん在庫</h1>
-              <p className="text-xs text-slate-400">Anshin Zaiko</p>
+              <p className="text-xs text-slate-400">かんたん在庫管理</p>
             </div>
           </Link>
         </div>

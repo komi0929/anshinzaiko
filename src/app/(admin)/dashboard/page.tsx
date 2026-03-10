@@ -106,13 +106,13 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-extrabold">ダッシュボード</h1>
+          <h1 className="text-3xl font-extrabold">ホーム 🏠</h1>
           <p className="text-[var(--color-text-secondary)] mt-1">
-            {store?.name || "マイ店舗"} の在庫状況
+            {store?.name || "マイ店舗"} の今の在庫のようすです
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--color-brand-orange)] to-[var(--color-brand-orange-dark)] flex items-center justify-center">
             <ChefHat className="w-6 h-6 text-white" />
           </div>
         </div>
@@ -130,9 +130,9 @@ export default function DashboardPage() {
               <Package className="w-5 h-5 text-orange-600" />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-bold text-sm">スタッフ用URL</h3>
+              <h3 className="font-bold text-sm">📱 スタッフ用のURL</h3>
               <p className="text-xs text-[var(--color-text-secondary)] mt-0.5 mb-2">
-                このURLをスタッフに共有すると、ログインなしで在庫入力できます
+                このURLをスタッフさんに送ると、ログインなしですぐに在庫入力できます♪
               </p>
               <div className="flex items-center gap-2">
                 <code className="text-xs bg-white/60 px-3 py-1.5 rounded-lg flex-1 truncate">
@@ -154,7 +154,7 @@ export default function DashboardPage() {
       <div>
         <div className="flex items-center gap-2 mb-4">
           <AlertTriangle className="w-5 h-5 text-orange-500" />
-          <h2 className="text-xl font-bold">要発注リスト</h2>
+          <h2 className="text-xl font-bold">そろそろ注文リスト</h2>
           {alerts.length > 0 && (
             <span className="badge badge-danger">{alerts.length}件</span>
           )}
@@ -174,9 +174,9 @@ export default function DashboardPage() {
                 className="object-contain"
               />
             </div>
-            <h3 className="text-lg font-bold mb-1">発注が必要な材料はありません</h3>
+            <h3 className="text-lg font-bold mb-1">在庫はぜんぶ足りています 🎉</h3>
             <p className="text-[var(--color-text-secondary)] text-sm">
-              在庫が発注目安を下回ると、ここに表示されます
+              在庫が少なくなると、ここにお知らせが出ます
             </p>
           </motion.div>
         ) : (
@@ -203,10 +203,10 @@ export default function DashboardPage() {
                     </span>
                   </div>
                   <p className="text-sm text-[var(--color-text-secondary)]">
-                    現在: <span className="font-bold text-red-600">
+                    いま: <span className="font-bold text-red-600">
                       {alert.inventory?.current_count ?? 0}
                     </span>
-                    {alert.material.unit} / 目安: {alert.material.reorder_threshold}{alert.material.unit}
+                    {alert.material.unit} ／ めやす: {alert.material.reorder_threshold}{alert.material.unit}
                     {alert.material.supplier_name && (
                       <span className="ml-2">• {alert.material.supplier_name}</span>
                     )}
@@ -221,7 +221,7 @@ export default function DashboardPage() {
                       className="btn btn-primary gap-1.5"
                     >
                       <ShoppingCart className="w-4 h-4" />
-                      購入
+                      注文する
                       <ExternalLink className="w-3 h-3" />
                     </button>
                   ) : alert.material.supplier_email ? (
@@ -230,11 +230,11 @@ export default function DashboardPage() {
                       className="btn btn-success gap-1.5"
                     >
                       <Mail className="w-4 h-4" />
-                      メールで発注
+                      メールで注文
                     </button>
                   ) : (
                     <span className="text-xs text-[var(--color-text-muted)]">
-                      購入先未登録
+                      注文先が未登録です
                     </span>
                   )}
                 </div>

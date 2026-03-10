@@ -10,14 +10,14 @@ const notoSansJP = Noto_Sans_JP({
 });
 
 export const metadata: Metadata = {
-  title: "あんしん在庫 | 飲食店向け在庫管理ツール",
-  description: "飲食店・菓子製造業向けの完全無料在庫管理SaaS。「1秒の無駄も許さない」をコンセプトに、現場スタッフの入力負荷ゼロと管理者の手計算ゼロを実現。",
+  title: "あんしん在庫 | かんたん在庫管理ツール",
+  description: "飲食店・お菓子屋さんのための、ずっと無料の在庫管理ツール。スマホでかんたん入力、むずかしい操作はゼロ。はじめてでもあんしんして使えます。",
   icons: {
     icon: "/images/app_logo.png",
   },
   openGraph: {
-    title: "あんしん在庫 | 飲食店向け在庫管理ツール",
-    description: "現場の入力負荷ゼロ。管理者の手計算ゼロ。完全無料の在庫管理SaaS。",
+    title: "あんしん在庫 | かんたん在庫管理ツール",
+    description: "スマホでポンポン入力、むずかしい操作ゼロ。ずっと無料のかんたん在庫管理。",
     images: ["/images/dashboard_hero.png"],
   },
 };

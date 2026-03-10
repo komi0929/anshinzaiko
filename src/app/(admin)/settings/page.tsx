@@ -53,15 +53,15 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-extrabold">店舗設定</h1>
+        <h1 className="text-3xl font-extrabold">お店の設定 ⚙️</h1>
         <p className="text-[var(--color-text-secondary)] mt-1">
-          店舗情報とアフィリエイト設定
+          お店の名前やその他の設定ができます
         </p>
       </div>
 
       <div className="card p-6 space-y-6 max-w-2xl">
         <div>
-          <label className="block text-sm font-medium mb-1.5">店舗名</label>
+          <label className="block text-sm font-medium mb-1.5">お店の名前</label>
           <input
             className="input"
             value={form.name}
@@ -72,11 +72,11 @@ export default function SettingsPage() {
         <div className="p-4 bg-[var(--color-surface-dim)] rounded-xl space-y-4">
           <div className="flex items-center gap-2">
             <Settings className="w-4 h-4 text-[var(--color-text-muted)]" />
-            <h3 className="font-bold text-sm">アフィリエイト設定（マネタイズ）</h3>
+            <h3 className="font-bold text-sm">💡 アフィリエイト設定（任意）</h3>
           </div>
           <p className="text-xs text-[var(--color-text-secondary)]">
-            材料の購入先URLがAmazon/楽天の場合、以下のIDがURLに自動付与されます。
-            これにより、利用者の負担ゼロで開発者に収益が入ります。
+            材料の注文リンクがAmazon/楽天の場合、ここのIDが自動でつきます。
+            ご利用者さんに追加のご負担はありません。
           </p>
           <div>
             <label className="block text-sm font-medium mb-1.5">Amazon アフィリエイトタグ</label>
@@ -100,7 +100,7 @@ export default function SettingsPage() {
 
         {store && (
           <div className="p-4 bg-orange-50 rounded-xl">
-            <p className="text-sm font-medium mb-1">スタッフ用トークン</p>
+            <p className="text-sm font-medium mb-1">📱 スタッフ用のトークン</p>
             <code className="text-xs break-all text-[var(--color-text-secondary)]">
               {store.staff_token}
             </code>
@@ -114,7 +114,7 @@ export default function SettingsPage() {
             className="btn btn-primary"
           >
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            保存
+            保存する
           </button>
           {saved && (
             <motion.span
@@ -122,7 +122,7 @@ export default function SettingsPage() {
               animate={{ opacity: 1 }}
               className="text-sm text-green-600 font-medium"
             >
-              ✓ 保存しました
+              ✓ 保存しました！
             </motion.span>
           )}
         </div>

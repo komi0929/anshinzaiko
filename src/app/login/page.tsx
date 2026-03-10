@@ -98,7 +98,7 @@ export default function LoginPage() {
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-black/20" />
         <div className="absolute inset-0 flex items-center justify-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -108,8 +108,8 @@ export default function LoginPage() {
           >
             <h2 className="text-5xl font-extrabold mb-4">あんしん在庫</h2>
             <p className="text-xl text-white/80 max-w-md mx-auto leading-relaxed">
-              1秒の無駄も許さない。<br />
-              現場の入力負荷ゼロ、管理者の手計算ゼロ。
+              もう在庫管理で悩まない。<br />
+              かんたん操作で、毎日のお仕事がもっとラクに♪
             </p>
           </motion.div>
         </div>
@@ -125,23 +125,23 @@ export default function LoginPage() {
         >
           {/* Mobile Logo */}
           <div className="flex items-center gap-3 mb-8 lg:hidden">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--color-brand-orange)] to-[var(--color-brand-orange-dark)] flex items-center justify-center">
               <ChefHat className="w-7 h-7 text-white" />
             </div>
             <div>
               <h1 className="font-bold text-2xl">あんしん在庫</h1>
-              <p className="text-sm text-[var(--color-text-secondary)]">Anshin Zaiko</p>
+              <p className="text-sm text-[var(--color-text-secondary)]">かんたん在庫管理</p>
             </div>
           </div>
 
           <div className="card p-8">
             <h2 className="text-2xl font-bold mb-2">
-              {isSignup ? "新規登録" : "管理者ログイン"}
+              {isSignup ? "はじめての方はこちら ✨" : "おかえりなさい 🍳"}
             </h2>
             <p className="text-[var(--color-text-secondary)] mb-6">
               {isSignup
-                ? "新しい店舗アカウントを作成します"
-                : "メールアドレスとパスワードでログイン"}
+                ? "お店のアカウントをつくりましょう"
+                : "メールアドレスとパスワードでログインしてください"}
             </p>
 
             {error && (
@@ -157,7 +157,7 @@ export default function LoginPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               {isSignup && (
                 <div>
-                  <label className="block text-sm font-medium mb-1.5">店舗名</label>
+                  <label className="block text-sm font-medium mb-1.5">お店の名前</label>
                   <input
                     type="text"
                     className="input"
@@ -174,7 +174,7 @@ export default function LoginPage() {
                 <input
                   type="email"
                   className="input"
-                  placeholder="admin@example.com"
+                  placeholder="mail@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -188,7 +188,7 @@ export default function LoginPage() {
                   <input
                     type={showPassword ? "text" : "password"}
                     className="input pr-10"
-                    placeholder="6文字以上"
+                    placeholder="6文字以上で入力してね"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -213,9 +213,9 @@ export default function LoginPage() {
                 {loading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
                 ) : isSignup ? (
-                  "アカウント作成"
+                  "アカウントをつくる"
                 ) : (
-                  "ログイン"
+                  "ログインする"
                 )}
               </button>
             </form>
@@ -229,18 +229,18 @@ export default function LoginPage() {
                 className="text-sm text-[var(--color-brand-orange)] hover:underline font-medium"
               >
                 {isSignup
-                  ? "既にアカウントをお持ちの方"
-                  : "新規登録はこちら"}
+                  ? "すでにアカウントをお持ちの方はこちら"
+                  : "はじめての方は新規登録へ ✨"}
               </button>
             </div>
           </div>
 
           <p className="text-center text-xs text-[var(--color-text-muted)] mt-6">
-            ログインすることで
+            ご利用にあたり
             <a href="/terms" className="underline">利用規約</a>
             と
             <a href="/privacy" className="underline">プライバシーポリシー</a>
-            に同意します
+            に同意したものとみなされます
           </p>
         </motion.div>
       </div>

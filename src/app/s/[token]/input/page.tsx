@@ -177,12 +177,12 @@ function StaffInputContent() {
         <button onClick={handleBack} className="p-2 -ml-2 rounded-lg hover:bg-gray-100">
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--color-brand-orange)] to-[var(--color-brand-orange-dark)] flex items-center justify-center">
           <ChefHat className="w-5 h-5 text-white" />
         </div>
         <div className="flex-1">
-          <p className="font-bold text-sm leading-tight">在庫入力</p>
-          <p className="text-xs text-[var(--color-text-muted)]">{staffName}</p>
+          <p className="font-bold text-sm leading-tight">在庫チェック 📋</p>
+          <p className="text-xs text-[var(--color-text-muted)]">{staffName}さん</p>
         </div>
       </div>
 
@@ -211,7 +211,7 @@ function StaffInputContent() {
                   : "text-[var(--color-text-secondary)] hover:bg-gray-100"
               }`}
             >
-              未分類
+              その他
             </button>
           )}
         </div>
@@ -252,7 +252,7 @@ function StaffInputContent() {
                         ? "bg-red-100 text-red-700"
                         : "bg-green-100 text-green-700"
                     }`}>
-                      {isPlenty ? "大量" : count}
+                      {isPlenty ? "たくさん" : count}
                     </div>
                     <div className="flex-1">
                       <p className="font-bold">{mat.name}</p>
@@ -260,7 +260,7 @@ function StaffInputContent() {
                         {mat.unit}
                         {mat.reorder_threshold > 0 && (
                           <span className={isLow ? " text-red-500 font-bold" : ""}>
-                            {" "}• 目安: {mat.reorder_threshold}
+                            {" "}• めやす: {mat.reorder_threshold}
                           </span>
                         )}
                       </p>
@@ -283,7 +283,7 @@ function StaffInputContent() {
 
           {filteredMaterials.length === 0 && (
             <div className="text-center py-12 text-[var(--color-text-muted)]">
-              この保管場所に材料がありません
+              この場所にはまだ材料がありません
             </div>
           )}
         </div>
@@ -306,7 +306,7 @@ function StaffInputContent() {
                 {materials.find((m) => m.id === selectedMaterial)?.name}
               </p>
               <p className="text-3xl font-extrabold">
-                {getIsPlenty(selectedMaterial) ? "大量" : getCurrentCount(selectedMaterial)}
+                {getIsPlenty(selectedMaterial) ? "たくさん ✨" : getCurrentCount(selectedMaterial)}
               </p>
             </div>
 
@@ -340,7 +340,7 @@ function StaffInputContent() {
                 }`}
               >
                 <Sparkles className="w-5 h-5 mr-1" />
-                大量
+                たくさん
               </button>
             </div>
 

@@ -46,7 +46,7 @@ export default function StaffSelectPage() {
       ]);
 
       if (!storeData) {
-        setError("店舗が見つかりません");
+        setError("お店がみつかりません");
         setLoading(false);
         return;
       }
@@ -83,7 +83,7 @@ export default function StaffSelectPage() {
         <div className="text-center">
           <p className="text-lg font-bold text-red-600 mb-2">{error}</p>
           <p className="text-sm text-[var(--color-text-secondary)]">
-            URLが正しいか確認してください
+            URLがあっているか確認してみてくださいね
           </p>
         </div>
       </div>
@@ -98,16 +98,16 @@ export default function StaffSelectPage() {
         animate={{ opacity: 1, y: 0 }}
         className="text-center mb-8 pt-4"
       >
-        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center mx-auto mb-4 shadow-lg">
+        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[var(--color-brand-orange)] to-[var(--color-brand-orange-dark)] flex items-center justify-center mx-auto mb-4 shadow-lg">
           <ChefHat className="w-9 h-9 text-white" />
         </div>
         <h1 className="text-2xl font-extrabold">{store?.name}</h1>
-        <p className="text-[var(--color-text-secondary)] mt-1">在庫入力</p>
+        <p className="text-[var(--color-text-secondary)] mt-1">在庫チェック 📋</p>
       </motion.div>
 
       {/* Staff Name Selection */}
       <div className="flex-1">
-        <p className="text-center text-lg font-bold mb-6">あなたの名前を選択してください</p>
+        <p className="text-center text-lg font-bold mb-6">あなたのお名前をえらんでね 🙋‍♀️</p>
 
         <div className="grid grid-cols-2 gap-4 max-w-lg mx-auto">
           {staff.map((s, i) => (
@@ -126,8 +126,8 @@ export default function StaffSelectPage() {
 
         {staff.length === 0 && (
           <div className="text-center py-12 text-[var(--color-text-muted)]">
-            <p>スタッフが登録されていません</p>
-            <p className="text-sm mt-1">管理者に連絡してください</p>
+            <p>まだスタッフが登録されていません</p>
+            <p className="text-sm mt-1">管理者の方に聞いてみてくださいね</p>
           </div>
         )}
       </div>

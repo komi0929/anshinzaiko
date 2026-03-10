@@ -146,9 +146,9 @@ export default function MaterialsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-extrabold">材料マスター</h1>
+          <h1 className="text-3xl font-extrabold">材料リスト 📦</h1>
           <p className="text-[var(--color-text-secondary)] mt-1">
-            {materials.length}件の材料を管理中
+            ぜんぶで{materials.length}件の材料があります
           </p>
         </div>
         <button
@@ -160,7 +160,7 @@ export default function MaterialsPage() {
           className="btn btn-primary"
         >
           <Plus className="w-4 h-4" />
-          材料を追加
+          材料をついか
         </button>
       </div>
 
@@ -170,7 +170,7 @@ export default function MaterialsPage() {
         <input
           type="text"
           className="input pl-10"
-          placeholder="材料名、購入先、カテゴリで検索..."
+          placeholder="名前や購入先でさがす..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -185,9 +185,9 @@ export default function MaterialsPage() {
                 <th className="text-left px-4 py-3 text-xs font-semibold text-[var(--color-text-secondary)] uppercase">材料名</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-[var(--color-text-secondary)] uppercase">分類</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-[var(--color-text-secondary)] uppercase">保管場所</th>
-                <th className="text-right px-4 py-3 text-xs font-semibold text-[var(--color-text-secondary)] uppercase">購入額</th>
-                <th className="text-right px-4 py-3 text-xs font-semibold text-[var(--color-text-secondary)] uppercase">単位原価</th>
-                <th className="text-center px-4 py-3 text-xs font-semibold text-[var(--color-text-secondary)] uppercase">発注目安</th>
+                <th className="text-right px-4 py-3 text-xs font-semibold text-[var(--color-text-secondary)] uppercase">お値段</th>
+                <th className="text-right px-4 py-3 text-xs font-semibold text-[var(--color-text-secondary)] uppercase">1つあたり</th>
+                <th className="text-center px-4 py-3 text-xs font-semibold text-[var(--color-text-secondary)] uppercase">注文めやす</th>
                 <th className="text-right px-4 py-3 text-xs font-semibold text-[var(--color-text-secondary)] uppercase">操作</th>
               </tr>
             </thead>
@@ -268,7 +268,7 @@ export default function MaterialsPage() {
             >
               <div className="flex items-center justify-between p-6 border-b border-[var(--color-border)]">
                 <h2 className="text-xl font-bold">
-                  {editingId ? "材料を編集" : "材料を追加"}
+                  {editingId ? "材料を編集 ✏️" : "材料をついか ➕"}
                 </h2>
                 <button
                   onClick={() => setShowModal(false)}
@@ -282,7 +282,7 @@ export default function MaterialsPage() {
                 {/* Name & Category */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-1.5">材料名 *</label>
+                    <label className="block text-sm font-medium mb-1.5">材料の名前 *</label>
                     <input
                       className="input"
                       placeholder="例: 薄力粉"
@@ -291,7 +291,7 @@ export default function MaterialsPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1.5">大項目</label>
+                    <label className="block text-sm font-medium mb-1.5">種類</label>
                     <select
                       className="input"
                       value={form.category}
@@ -306,13 +306,13 @@ export default function MaterialsPage() {
 
                 {/* Location */}
                 <div>
-                  <label className="block text-sm font-medium mb-1.5">保管場所</label>
+                  <label className="block text-sm font-medium mb-1.5">しまう場所</label>
                   <select
                     className="input"
                     value={form.location_id || ""}
                     onChange={(e) => setForm({ ...form, location_id: e.target.value || null })}
                   >
-                    <option value="">未指定</option>
+                    <option value="">まだ決めていない</option>
                     {locations.map((loc) => (
                       <option key={loc.id} value={loc.id}>{loc.name}</option>
                     ))}
@@ -322,7 +322,7 @@ export default function MaterialsPage() {
                 {/* Supplier */}
                 <div className="grid grid-cols-1 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-1.5">購入先名称</label>
+                    <label className="block text-sm font-medium mb-1.5">買うところ</label>
                     <input
                       className="input"
                       placeholder="例: Amazon / 〇〇商店"
@@ -332,7 +332,7 @@ export default function MaterialsPage() {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium mb-1.5">購入先URL</label>
+                      <label className="block text-sm font-medium mb-1.5">買うところのURL</label>
                       <input
                         className="input"
                         placeholder="https://..."
@@ -341,7 +341,7 @@ export default function MaterialsPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-1.5">購入先Email</label>
+                      <label className="block text-sm font-medium mb-1.5">買うところのメール</label>
                       <input
                         className="input"
                         placeholder="order@supplier.co.jp"
@@ -354,10 +354,10 @@ export default function MaterialsPage() {
 
                 {/* Pricing */}
                 <div className="p-4 bg-[var(--color-surface-dim)] rounded-xl space-y-4">
-                  <h3 className="font-bold text-sm">原価計算</h3>
+                  <h3 className="font-bold text-sm">💰 お値段の情報</h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium mb-1.5">購入額 (税込)</label>
+                      <label className="block text-sm font-medium mb-1.5">買った値段（税込み）</label>
                       <input
                         type="number"
                         className="input"
@@ -377,7 +377,7 @@ export default function MaterialsPage() {
                   </div>
                   <div className="grid grid-cols-3 gap-4">
                     <div>
-                      <label className="block text-sm font-medium mb-1.5">入数</label>
+                      <label className="block text-sm font-medium mb-1.5">入り数</label>
                       <input
                         type="number"
                         className="input"
@@ -386,7 +386,7 @@ export default function MaterialsPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-1.5">内容量</label>
+                      <label className="block text-sm font-medium mb-1.5">中身の量</label>
                       <input
                         type="number"
                         className="input"
@@ -395,14 +395,14 @@ export default function MaterialsPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-1.5">単位</label>
+                      <label className="block text-sm font-medium mb-1.5">たんい</label>
                       <select
                         className="input"
                         value={form.unit}
                         onChange={(e) => setForm({ ...form, unit: e.target.value })}
                       >
-                        <option value="g">g (グラム)</option>
-                        <option value="ml">ml (ミリリットル)</option>
+                        <option value="g">g（グラム）</option>
+                        <option value="ml">ml（ミリリットル）</option>
                         <option value="個">個</option>
                         <option value="枚">枚</option>
                         <option value="本">本</option>
@@ -415,7 +415,7 @@ export default function MaterialsPage() {
                   <div className="bg-white rounded-xl p-4 border border-[var(--color-border)]">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium text-[var(--color-text-secondary)]">
-                        1{form.unit}あたり実質原価
+                        1{form.unit}あたりのお値段
                       </span>
                       <span className="text-2xl font-extrabold text-[var(--color-brand-orange)]">
                         ¥{previewUnitCost.toFixed(2)}
@@ -429,11 +429,11 @@ export default function MaterialsPage() {
 
                 {/* Reorder Threshold */}
                 <div>
-                  <label className="block text-sm font-medium mb-1.5">発注目安数</label>
+                  <label className="block text-sm font-medium mb-1.5">「そろそろ注文」のめやす</label>
                   <input
                     type="number"
                     className="input"
-                    placeholder="この数を下回ると発注アラートが出ます"
+                    placeholder="この数より少なくなったらお知らせします"
                     value={form.reorder_threshold}
                     onChange={(e) => setForm({ ...form, reorder_threshold: Number(e.target.value) })}
                   />
@@ -446,14 +446,14 @@ export default function MaterialsPage() {
                   onClick={() => setShowModal(false)}
                   className="btn btn-secondary"
                 >
-                  キャンセル
+                  やめる
                 </button>
                 <button
                   onClick={handleSave}
                   disabled={saving || !form.name}
                   className="btn btn-primary"
                 >
-                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : editingId ? "更新" : "追加"}
+                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : editingId ? "保存する" : "ついかする"}
                 </button>
               </div>
             </motion.div>
