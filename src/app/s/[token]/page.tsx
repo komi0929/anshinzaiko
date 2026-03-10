@@ -26,17 +26,6 @@ export default function StaffSelectPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    // Check if staff name is already saved in localStorage
-    const savedName = localStorage.getItem(`anshinzaiko_staff_${token}`);
-    if (savedName) {
-      router.replace(`/s/${token}/input?staff=${encodeURIComponent(savedName)}`);
-      return;
-    }
-
-    loadData();
-  }, [token, router]);
-
   const loadData = async () => {
     setLoading(true);
     try {
@@ -58,6 +47,17 @@ export default function StaffSelectPage() {
     }
     setLoading(false);
   };
+
+  useEffect(() => {
+    // Check if staff name is already saved in localStorage
+    const savedName = localStorage.getItem(`anshinzaiko_staff_${token}`);
+    if (savedName) {
+      router.replace(`/s/${token}/input?staff=${encodeURIComponent(savedName)}`);
+      return;
+    }
+
+    loadData();
+  }, [token, router]);
 
   const handleSelectStaff = (name: string) => {
     // Save to localStorage for next visit auto-skip

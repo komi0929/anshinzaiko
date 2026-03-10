@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ChefHat, Smartphone, Monitor, Zap, Shield, ArrowRight, Heart } from "lucide-react";
+import { ChefHat, Smartphone, Monitor, Zap, ArrowRight, Heart } from "lucide-react";
 
 export default function HomePage() {
   return (
