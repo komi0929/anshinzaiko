@@ -1,0 +1,376 @@
+@import "tailwindcss";
+
+/* ============================================
+   Anshin Zaiko - Design System
+   ============================================ */
+
+@theme {
+  /* Brand Colors */
+  --color-brand-orange: #F97316;
+  --color-brand-orange-light: #FDBA74;
+  --color-brand-orange-dark: #EA580C;
+  --color-brand-green: #22C55E;
+  --color-brand-green-light: #86EFAC;
+  --color-brand-green-dark: #16A34A;
+
+  /* Neutral */
+  --color-surface: #FFFFFF;
+  --color-surface-dim: #F8FAFC;
+  --color-surface-dark: #1E293B;
+  --color-surface-darker: #0F172A;
+  --color-border: #E2E8F0;
+  --color-border-dark: #334155;
+
+  /* Text */
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #64748B;
+  --color-text-muted: #94A3B8;
+  --color-text-on-brand: #FFFFFF;
+
+  /* Status */
+  --color-danger: #EF4444;
+  --color-warning: #F59E0B;
+  --color-success: #22C55E;
+  --color-info: #3B82F6;
+
+  /* Shadows */
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-modal: 0 20px 60px rgba(0, 0, 0, 0.15);
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Fonts */
+  --font-sans: 'Noto Sans JP', system-ui, -apple-system, sans-serif;
+}
+
+/* ============================================
+   Base Reset & Typography
+   ============================================ */
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-text-primary);
+  background-color: var(--color-surface-dim);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   Utility Classes
+   ============================================ */
+
+/* Glass effect */
+.glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.glass-dark {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(51, 65, 85, 0.5);
+}
+
+/* Gradient backgrounds */
+.bg-gradient-brand {
+  background: linear-gradient(135deg, var(--color-brand-orange), var(--color-brand-orange-dark));
+}
+
+.bg-gradient-hero {
+  background: linear-gradient(135deg, #1E293B 0%, #334155 50%, #1E293B 100%);
+}
+
+/* Card styles */
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--color-border);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* Button base */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  user-select: none;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-brand-orange), var(--color-brand-orange-dark));
+  color: var(--color-text-on-brand);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+}
+
+.btn-secondary {
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+}
+
+.btn-secondary:hover {
+  background: var(--color-surface-dim);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, var(--color-brand-green), var(--color-brand-green-dark));
+  color: var(--color-text-on-brand);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, var(--color-danger), #DC2626);
+  color: var(--color-text-on-brand);
+}
+
+/* Input styles */
+.input {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  font-size: 1rem;
+  color: var(--color-text-primary);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--color-brand-orange);
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+}
+
+.input::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* Badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.5rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-warning {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.badge-danger {
+  background: #FEE2E2;
+  color: #991B1B;
+}
+
+.badge-success {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+/* ============================================
+   Staff Mobile Specific
+   ============================================ */
+
+/* Disable text selection on interactive elements */
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Custom large numpad button */
+.numpad-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  border-radius: var(--radius-lg);
+  font-size: 1.25rem;
+  font-weight: 700;
+  transition: all 0.1s ease;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: pointer;
+  border: none;
+}
+
+.numpad-btn:active {
+  transform: scale(0.93);
+}
+
+.numpad-minus {
+  background: linear-gradient(135deg, #FEE2E2, #FECACA);
+  color: #DC2626;
+}
+
+.numpad-plus {
+  background: linear-gradient(135deg, #D1FAE5, #A7F3D0);
+  color: #059669;
+}
+
+.numpad-plus-ten {
+  background: linear-gradient(135deg, #DBEAFE, #BFDBFE);
+  color: #1D4ED8;
+}
+
+.numpad-plenty {
+  background: linear-gradient(135deg, var(--color-brand-orange-light), var(--color-brand-orange));
+  color: white;
+}
+
+/* Staff name button */
+.staff-name-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+  border-radius: var(--radius-xl);
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  color: var(--color-text-primary);
+  transition: all 0.15s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.staff-name-btn:active {
+  transform: scale(0.96);
+  border-color: var(--color-brand-orange);
+  background: #FFF7ED;
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.4s ease forwards;
+}
+
+/* ============================================
+   Admin Sidebar
+   ============================================ */
+
+.sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background: var(--color-surface-darker);
+  border-right: 1px solid var(--color-border-dark);
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.sidebar-link:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+}
+
+.sidebar-link.active {
+  background: rgba(249, 115, 22, 0.15);
+  color: var(--color-brand-orange);
+}
+
+/* ============================================
+   Scrollbar (minimal)
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-text-muted);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-secondary);
+}
+
+/* ============================================
+   Responsive helpers
+   ============================================ */
+
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+}
