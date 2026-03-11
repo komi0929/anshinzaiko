@@ -121,7 +121,7 @@ export default function DashboardPage() {
         <div>
           <h1 className="text-3xl font-extrabold">ホーム 🏠</h1>
           <p className="text-[var(--color-text-secondary)] mt-1">
-            {store?.name || "マイ店舗"} の今の在庫のようすです
+            {store?.name || "マイ店舗"} の在庫状況です
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -145,7 +145,7 @@ export default function DashboardPage() {
             <div className="flex-1 min-w-0">
               <h3 className="font-bold text-sm">📱 スタッフ用のURL</h3>
               <p className="text-xs text-[var(--color-text-secondary)] mt-0.5 mb-2">
-                このURLをスタッフさんに送ると、ログインなしですぐに在庫入力できます♪
+                このURLをスタッフに共有すると、ログインなしで在庫入力ができます。
               </p>
               <div className="flex items-center gap-2">
                 <code className="text-xs bg-white/60 px-3 py-1.5 rounded-lg flex-1 truncate">
@@ -187,7 +187,7 @@ export default function DashboardPage() {
                 className="object-contain"
               />
             </div>
-            <h3 className="text-lg font-bold mb-1">在庫はぜんぶ足りています 🎉</h3>
+            <h3 className="text-lg font-bold mb-1">在庫はすべて足りています 🎉</h3>
             <p className="text-[var(--color-text-secondary)] text-sm">
               在庫が少なくなると、ここにお知らせが出ます
             </p>
@@ -216,10 +216,10 @@ export default function DashboardPage() {
                     </span>
                   </div>
                   <p className="text-sm text-[var(--color-text-secondary)]">
-                    いま: <span className="font-bold text-red-600">
+                    現在: <span className="font-bold text-red-600">
                       {alert.inventory?.current_count ?? 0}
                     </span>
-                    {alert.material.unit} ／ めやす: {alert.material.reorder_threshold}{alert.material.unit}
+                    {alert.material.unit} ／ 目安: {alert.material.reorder_threshold}{alert.material.unit}
                     {alert.material.supplier_name && (
                       <span className="ml-2">• {alert.material.supplier_name}</span>
                     )}

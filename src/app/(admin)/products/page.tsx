@@ -148,7 +148,7 @@ export default function ProductsPage() {
           className="btn btn-primary"
         >
           <Plus className="w-4 h-4" />
-          商品をついか
+          商品を追加
         </button>
       </div>
 
@@ -184,7 +184,7 @@ export default function ProductsPage() {
           ))}
           {products.length === 0 && (
             <div className="card p-8 text-center text-[var(--color-text-muted)]">
-              まだ商品がありません ✨
+              まだ商品が登録されていません ✨
             </div>
           )}
         </div>
@@ -197,7 +197,7 @@ export default function ProductsPage() {
                 <div>
                   <h2 className="text-2xl font-bold">{selectedProductData.name}</h2>
                   <p className="text-[var(--color-text-secondary)]">
-                    レシピのなかみと原価
+                    レシピの内容と原価
                   </p>
                 </div>
                 <button
@@ -236,20 +236,20 @@ export default function ProductsPage() {
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-bold flex items-center gap-2">
                     <Layers className="w-4 h-4" />
-                    レシピのなかみ
+                    レシピの内容
                   </h3>
                   <button
                     onClick={() => setShowAddRecipeItem(true)}
                     className="btn btn-secondary text-sm"
                   >
                     <Plus className="w-4 h-4" />
-                    材料をついか
+                    材料を追加
                   </button>
                 </div>
 
                 {recipeItems.length === 0 ? (
                   <div className="p-6 bg-[var(--color-surface-dim)] rounded-xl text-center text-[var(--color-text-muted)]">
-                    まだレシピに材料がありません
+                    レシピに材料が登録されていません
                   </div>
                 ) : (
                   <div className="space-y-2">
@@ -269,7 +269,7 @@ export default function ProductsPage() {
                               {item.material?.name || item.sub_product?.name || "不明"}
                             </p>
                             <p className="text-xs text-[var(--color-text-muted)]">
-                              つかう量: {item.quantity}{item.material ? item.material.unit : "割合"}
+                              使用量: {item.quantity}{item.material ? item.material.unit : "割合"}
                               {item.material && (
                                 <span className="ml-2">
                                   (¥{(Number(item.material.unit_cost) * item.quantity).toFixed(2)})
@@ -348,7 +348,7 @@ export default function ProductsPage() {
                           <input
                             type="number"
                             className="input"
-                            placeholder={addType === "material" ? "つかう量" : "割合 (0.5=半分)"}
+                            placeholder={addType === "material" ? "使用量" : "割合 (0.5=半分)"}
                             value={addQuantity}
                             onChange={(e) => setAddQuantity(Number(e.target.value))}
                             step="0.1"
@@ -367,7 +367,7 @@ export default function ProductsPage() {
                           disabled={saving || !addRefId}
                           className="btn btn-primary text-sm"
                         >
-                          {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : "ついか"}
+                          {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : "追加"}
                         </button>
                       </div>
                     </div>
@@ -402,7 +402,7 @@ export default function ProductsPage() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between p-6 border-b border-[var(--color-border)]">
-                <h2 className="text-xl font-bold">商品をついか ✨</h2>
+                <h2 className="text-xl font-bold">商品を追加 ✨</h2>
                 <button onClick={() => setShowAddModal(false)} className="p-2 rounded-lg hover:bg-gray-100">
                   <X className="w-5 h-5" />
                 </button>
@@ -434,7 +434,7 @@ export default function ProductsPage() {
                   disabled={saving || !newProductName}
                   className="btn btn-primary"
                 >
-                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : "ついかする"}
+                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : "追加する"}
                 </button>
               </div>
             </motion.div>

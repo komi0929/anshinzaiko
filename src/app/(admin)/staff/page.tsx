@@ -48,7 +48,7 @@ export default function StaffPage() {
       <div>
         <h1 className="text-3xl font-extrabold">スタッフ 👩‍🍳</h1>
         <p className="text-[var(--color-text-secondary)] mt-1">
-          ここで登録した名前が、スタッフさんの入力画面に出ます
+          ここで登録した名前が、スタッフの入力画面に表示されます
         </p>
       </div>
 
@@ -57,7 +57,7 @@ export default function StaffPage() {
         <div className="flex items-center gap-3">
           <input
             className="input flex-1"
-            placeholder="スタッフの名前を入れてね..."
+            placeholder="スタッフの名前を入力..."
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleAdd()}
@@ -68,7 +68,7 @@ export default function StaffPage() {
             className="btn btn-primary"
           >
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
-            ついか
+            追加
           </button>
         </div>
       </div>

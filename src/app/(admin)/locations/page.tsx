@@ -48,7 +48,7 @@ export default function LocationsPage() {
       <div>
         <h1 className="text-3xl font-extrabold">保管場所 📍</h1>
         <p className="text-[var(--color-text-secondary)] mt-1">
-          材料のしまう場所を登録できます。スタッフ画面のタブになります♪
+          材料の保管場所を管理できます。スタッフ画面のタブとして表示されます。
         </p>
       </div>
 
@@ -56,7 +56,7 @@ export default function LocationsPage() {
         <div className="flex items-center gap-3">
           <input
             className="input flex-1"
-            placeholder="場所の名前を入れてね（例: 冷蔵庫C）"
+            placeholder="場所の名前（例: 冷蔵庫C）"
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleAdd()}
@@ -67,7 +67,7 @@ export default function LocationsPage() {
             className="btn btn-primary"
           >
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
-            ついか
+            追加
           </button>
         </div>
       </div>

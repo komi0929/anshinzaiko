@@ -146,7 +146,7 @@ export default function SettingsPage() {
               📱 スタッフ用のURL
             </h2>
             <p className="text-xs text-[var(--color-text-secondary)] mb-3">
-              このURLをスタッフさんに送ると、ログインなしですぐに在庫入力できます♪
+              このURLをスタッフに共有すると、ログインなしで在庫入力ができます。
             </p>
             <div className="flex items-center gap-2">
               <code className="text-xs bg-[var(--color-surface-dim)] px-3 py-2 rounded-lg flex-1 truncate border border-[var(--color-border)]">
