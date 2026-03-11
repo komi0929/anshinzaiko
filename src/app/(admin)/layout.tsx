@@ -40,17 +40,17 @@ export default function AdminLayout({
 
   return (
     <div className="flex min-h-screen bg-[var(--color-surface-dim)]">
-      {/* Sidebar */}
+      {/* Sidebar - ライトフェミニンスタイル */}
       <aside className="sidebar flex flex-col">
         {/* Logo */}
-        <div className="p-6 border-b border-[var(--color-border-dark)]">
+        <div className="p-6 border-b border-[var(--color-border-sidebar)]">
           <Link href="/dashboard" className="flex items-center gap-3 no-underline">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--color-brand-orange)] to-[var(--color-brand-orange-dark)] flex items-center justify-center">
               <ChefHat className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-white font-bold text-lg leading-tight">あんしん在庫</h1>
-              <p className="text-xs text-slate-400">かんたん在庫管理</p>
+              <h1 className="text-[var(--color-text-primary)] font-bold text-lg leading-tight">あんしん在庫</h1>
+              <p className="text-xs text-[var(--color-text-secondary)]">かんたん在庫管理</p>
             </div>
           </Link>
         </div>
@@ -74,10 +74,10 @@ export default function AdminLayout({
         </nav>
 
         {/* Logout */}
-        <div className="p-4 border-t border-[var(--color-border-dark)]">
+        <div className="p-4 border-t border-[var(--color-border-sidebar)]">
           <button
             onClick={handleLogout}
-            className="sidebar-link w-full text-left hover:text-red-400"
+            className="sidebar-link w-full text-left hover:text-red-500"
           >
             <LogOut className="w-5 h-5" />
             ログアウト

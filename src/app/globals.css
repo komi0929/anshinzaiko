@@ -2,7 +2,7 @@
 
 /* ============================================
    Anshin Zaiko - Design System
-   やわらかく親しみやすいトーン
+   やわらかく親しみやすいライトトーン
    ============================================ */
 
 @theme {
@@ -14,18 +14,17 @@
   --color-brand-green-light: #B6ECC8;
   --color-brand-green-dark: #38A85C;
 
-  /* Neutral - やわらかいベース */
+  /* Neutral - やわらかいライトベース */
   --color-surface: #FFFFFF;
   --color-surface-dim: #FDF8F3;
-  --color-surface-dark: #3D3A4F;
-  --color-surface-darker: #2D2A3E;
+  --color-surface-sidebar: #FFF5EB;
   --color-border: #F0E6DB;
-  --color-border-dark: #4A4660;
+  --color-border-sidebar: #F0D8C4;
 
   /* Text - やさしい色合い */
-  --color-text-primary: #3D3A4F;
-  --color-text-secondary: #8B8499;
-  --color-text-muted: #B5AECC;
+  --color-text-primary: #4A4058;
+  --color-text-secondary: #8B7E99;
+  --color-text-muted: #C0B6D0;
   --color-text-on-brand: #FFFFFF;
 
   /* Status */
@@ -85,20 +84,9 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
-.glass-dark {
-  background: rgba(45, 42, 62, 0.88);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(74, 70, 96, 0.5);
-}
-
 /* Gradient backgrounds */
 .bg-gradient-brand {
   background: linear-gradient(135deg, var(--color-brand-orange), var(--color-brand-orange-dark));
-}
-
-.bg-gradient-hero {
-  background: linear-gradient(135deg, #3D3A4F 0%, #5C5878 50%, #3D3A4F 100%);
 }
 
 /* Card styles */
@@ -314,14 +302,14 @@ body {
 }
 
 /* ============================================
-   Admin Sidebar
+   Admin Sidebar - ライトフェミニンスタイル
    ============================================ */
 
 .sidebar {
   width: 260px;
   min-height: 100vh;
-  background: var(--color-surface-darker);
-  border-right: 1px solid var(--color-border-dark);
+  background: var(--color-surface-sidebar);
+  border-right: 1px solid var(--color-border-sidebar);
 }
 
 .sidebar-link {
@@ -330,7 +318,7 @@ body {
   gap: 0.75rem;
   padding: 0.75rem 1rem;
   border-radius: var(--radius-md);
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
   font-size: 0.875rem;
   font-weight: 500;
   transition: all 0.2s ease;
@@ -338,13 +326,14 @@ body {
 }
 
 .sidebar-link:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: white;
+  background: rgba(245, 158, 66, 0.08);
+  color: var(--color-text-primary);
 }
 
 .sidebar-link.active {
-  background: rgba(245, 158, 66, 0.15);
-  color: var(--color-brand-orange);
+  background: rgba(245, 158, 66, 0.12);
+  color: var(--color-brand-orange-dark);
+  font-weight: 600;
 }
 
 /* ============================================
