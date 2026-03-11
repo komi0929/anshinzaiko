@@ -89,6 +89,80 @@ export async function updateMaterial(id: string, formData: Record<string, unknow
   return { success: true };
 }
 
+// Bulk upsert materials (一括登録/編集)
+export async function bulkUpsertMaterials(rows: {
+  id?: string;
+  name: string;
+  category?: string;
+  location_id?: string | null;
+  supplier_name?: string;
+  supplier_url?: string;
+  supplier_email?: string;
+  purchase_price?: number;
+  units_per_purchase?: number;
+  content_amount?: number;
+  unit?: string;
+  shipping_cost?: number;
+  reorder_threshold?: number;
+}[]) {
+  const supabase = await createClient();
+  if (!supabase) return { success: false, error: "Not authenticated" };
+  const store = await getMyStore();
+  if (!store) return { success: false, error: "Store not found" };
+
+  const toInsert = rows.filter((r) => !r.id && r.name?.trim());
+  const toUpdate = rows.filter((r) => r.id && r.name?.trim());
+
+  let insertError = null;
+  let updateError = null;
+
+  if (toInsert.length > 0) {
+    const { error } = await supabase.from("materials").insert(
+      toInsert.map((r) => ({
+        store_id: store.id,
+        name: r.name,
+        category: r.category || "",
+        location_id: r.location_id || null,
+        supplier_name: r.supplier_name || "",
+        supplier_url: r.supplier_url || "",
+        supplier_email: r.supplier_email || "",
+        purchase_price: r.purchase_price || 0,
+        units_per_purchase: r.units_per_purchase || 1,
+        content_amount: r.content_amount || 1,
+        unit: r.unit || "個",
+        shipping_cost: r.shipping_cost || 0,
+        reorder_threshold: r.reorder_threshold || 0,
+      }))
+    );
+    insertError = error;
+  }
+
+  for (const r of toUpdate) {
+    const { error } = await supabase
+      .from("materials")
+      .update({
+        name: r.name,
+        category: r.category || "",
+        location_id: r.location_id || null,
+        supplier_name: r.supplier_name || "",
+        supplier_url: r.supplier_url || "",
+        supplier_email: r.supplier_email || "",
+        purchase_price: r.purchase_price || 0,
+        units_per_purchase: r.units_per_purchase || 1,
+        content_amount: r.content_amount || 1,
+        unit: r.unit || "個",
+        shipping_cost: r.shipping_cost || 0,
+        reorder_threshold: r.reorder_threshold || 0,
+      })
+      .eq("id", r.id!);
+    if (error) updateError = error;
+  }
+
+  if (insertError) return { success: false, error: insertError.message };
+  if (updateError) return { success: false, error: updateError.message };
+  return { success: true, inserted: toInsert.length, updated: toUpdate.length };
+}
+
 export async function deleteMaterial(id: string) {
   const supabase = await createClient();
   if (!supabase) return { success: false, error: "Not authenticated" };

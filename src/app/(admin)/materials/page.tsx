@@ -16,8 +16,10 @@ import {
   X,
   Package,
   Loader2,
+  FileSpreadsheet,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 
 interface MaterialData {
   id: string;
@@ -151,17 +153,23 @@ export default function MaterialsPage() {
             全{materials.length}件の材料が登録されています
           </p>
         </div>
-        <button
-          onClick={() => {
-            setEditingId(null);
-            setForm(emptyForm);
-            setShowModal(true);
-          }}
-          className="btn btn-primary"
-        >
-          <Plus className="w-4 h-4" />
-          材料を追加
-        </button>
+        <div className="flex gap-2">
+          <Link href="/materials/bulk" className="btn btn-secondary gap-1.5">
+            <FileSpreadsheet className="w-4 h-4" />
+            一括登録
+          </Link>
+          <button
+            onClick={() => {
+              setEditingId(null);
+              setForm(emptyForm);
+              setShowModal(true);
+            }}
+            className="btn btn-primary"
+          >
+            <Plus className="w-4 h-4" />
+            材料を追加
+          </button>
+        </div>
       </div>
 
       {/* Search */}
