@@ -689,6 +689,47 @@ export async function deleteLocation(id: string) {
   return { success: true };
 }
 
+export async function updateLocation(id: string, data: { name?: string; image_url?: string }) {
+  const supabase = await createClient();
+  if (!supabase) return { success: false, error: "Not authenticated" };
+
+  const { error } = await supabase.from("locations").update(data).eq("id", id);
+  if (error) return { success: false, error: error.message };
+  return { success: true };
+}
+
+export async function uploadLocationImage(locationId: string, base64Data: string, fileName: string) {
+  const supabase = await createClient();
+  if (!supabase) return { success: false, error: "Not authenticated" };
+
+  // Convert base64 to buffer
+  const base64Content = base64Data.replace(/^data:image\/\w+;base64,/, "");
+  const buffer = Buffer.from(base64Content, "base64");
+
+  const filePath = `locations/${locationId}/${Date.now()}-${fileName}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from("location-images")
+    .upload(filePath, buffer, {
+      contentType: `image/${fileName.split(".").pop() || "jpeg"}`,
+      upsert: true,
+    });
+
+  if (uploadError) return { success: false, error: uploadError.message };
+
+  const { data: urlData } = supabase.storage
+    .from("location-images")
+    .getPublicUrl(filePath);
+
+  // Update location record
+  await supabase
+    .from("locations")
+    .update({ image_url: urlData.publicUrl })
+    .eq("id", locationId);
+
+  return { success: true, url: urlData.publicUrl };
+}
+
 // ============================================
 // Staff Members CRUD
 // ============================================

@@ -18,6 +18,7 @@ import { motion, AnimatePresence } from "framer-motion";
 interface LocationData {
   id: string;
   name: string;
+  image_url?: string;
 }
 
 interface MaterialData {
@@ -347,6 +348,25 @@ function StaffInputContent() {
           })()}
         </div>
       </div>
+
+      {/* Location Photo Banner */}
+      {(() => {
+        const activeLoc = locations.find((l) => l.id === activeTab);
+        if (!activeLoc?.image_url) return null;
+        return (
+          <div className="relative h-28 mx-4 mt-3 rounded-xl overflow-hidden shadow-sm">
+            <img
+              src={activeLoc.image_url}
+              alt={activeLoc.name}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+            <div className="absolute bottom-2 left-3 text-white">
+              <p className="text-xs font-bold drop-shadow">{activeLoc.name}</p>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Material List */}
       <div className="flex-1 overflow-y-auto pb-48">
