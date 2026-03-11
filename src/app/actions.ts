@@ -633,6 +633,112 @@ export async function updateStoreSettings(data: {
 }
 
 // ============================================
+// Store Admin Management (Invitation)
+// ============================================
+
+export async function getStoreAdmins() {
+  const supabase = await createClient();
+  if (!supabase) return [];
+  const store = await getMyStore();
+  if (!store) return [];
+
+  const { data: admins } = await supabase
+    .from("store_admins")
+    .select("id, user_id, role, created_at")
+    .eq("store_id", store.id)
+    .order("created_at", { ascending: true });
+
+  if (!admins || admins.length === 0) return [];
+
+  // Resolve emails via admin client
+  try {
+    const adminClient = createAdminClient();
+    const results = await Promise.all(
+      admins.map(async (a) => {
+        const { data } = await adminClient.auth.admin.getUserById(a.user_id);
+        return {
+          ...a,
+          email: data?.user?.email || "不明",
+        };
+      })
+    );
+    return results;
+  } catch {
+    return admins.map((a) => ({ ...a, email: "不明" }));
+  }
+}
+
+export async function inviteStoreAdmin(email: string) {
+  const supabase = await createClient();
+  if (!supabase) return { success: false, error: "認証エラー" };
+  const store = await getMyStore();
+  if (!store) return { success: false, error: "店舗が見つかりません" };
+
+  // Find user by email via admin client
+  const adminClient = createAdminClient();
+  const { data: userList } = await adminClient.auth.admin.listUsers();
+  const targetUser = userList?.users?.find(
+    (u) => u.email?.toLowerCase() === email.toLowerCase()
+  );
+
+  if (!targetUser) {
+    return {
+      success: false,
+      error: "このメールアドレスのアカウントが見つかりません。先にアカウントを作成してもらってください。",
+    };
+  }
+
+  // Check if already added
+  const { data: existing } = await supabase
+    .from("store_admins")
+    .select("id")
+    .eq("store_id", store.id)
+    .eq("user_id", targetUser.id)
+    .maybeSingle();
+
+  if (existing) {
+    return { success: false, error: "このユーザーはすでに管理者として追加されています。" };
+  }
+
+  // Add as admin
+  const { error } = await supabase.from("store_admins").insert({
+    store_id: store.id,
+    user_id: targetUser.id,
+    role: "staff",
+  });
+
+  if (error) return { success: false, error: error.message };
+  return { success: true };
+}
+
+export async function removeStoreAdmin(adminId: string) {
+  const supabase = await createClient();
+  if (!supabase) return { success: false, error: "認証エラー" };
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { success: false, error: "ログインしてください" };
+
+  // Prevent self-deletion
+  const { data: target } = await supabase
+    .from("store_admins")
+    .select("user_id")
+    .eq("id", adminId)
+    .single();
+
+  if (target?.user_id === user.id) {
+    return { success: false, error: "自分自身は削除できません。" };
+  }
+
+  const { error } = await supabase
+    .from("store_admins")
+    .delete()
+    .eq("id", adminId);
+
+  if (error) return { success: false, error: error.message };
+  return { success: true };
+}
+
+// ============================================
 // Dynamic URL Rewriting (Server-Side Only)
 // Affiliate IDs are read from SYSTEM_* env vars
 // and NEVER exposed to the client JavaScript bundle.
