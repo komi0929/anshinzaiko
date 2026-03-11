@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 /**
  * Seed API Route - 一時的なダミーデータ投入用
@@ -9,15 +10,19 @@ import { createClient } from "@/lib/supabase/server";
  * Usage: POST /api/seed
  */
 export async function POST(req: NextRequest) {
-  const supabase = await createClient();
-  if (!supabase) {
+  // Auth check with normal client
+  const authClient = await createClient();
+  if (!authClient) {
     return NextResponse.json({ error: "DB接続エラー" }, { status: 500 });
   }
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await authClient.auth.getUser();
   if (!user) {
     return NextResponse.json({ error: "ログインしてください" }, { status: 401 });
   }
+
+  // Use admin client (bypasses RLS) for all data operations
+  const supabase = createAdminClient();
 
   // Get user's store - if not found, create one automatically
   let { data: admin } = await supabase
