@@ -41,8 +41,8 @@ export default function TermsPage() {
           </div>
 
           <div>
-            <h2 className="text-lg font-bold text-[var(--color-text-primary)] mb-2">第6条（アフィリエイトリンクについて）</h2>
-            <p>本サービスでは、材料の購入先として登録されたURLに対して、運営者のアフィリエイトIDが自動的に付与される場合があります。これにより、ユーザーの追加負担なく本サービスの運営費用が賄われています。</p>
+            <h2 className="text-lg font-bold text-[var(--color-text-primary)] mb-2">第6条（外部リンクについて）</h2>
+            <p>本サービスでは、材料の購入先として登録されたURLから外部サイトへ遷移する場合があります。外部サイトの内容やサービスについて、運営者は一切の責任を負いません。</p>
           </div>
 
           <p className="text-xs text-[var(--color-text-muted)] pt-4">

@@ -7,12 +7,10 @@ CREATE TABLE stores (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   name TEXT NOT NULL,
   staff_token TEXT UNIQUE NOT NULL,
-  affiliate_amazon_tag TEXT DEFAULT '',
-  affiliate_rakuten_id TEXT DEFAULT '',
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
--- 2. store_admins: 管理者（最大3名、Supabase Auth連携）
+-- 2. store_admins: 管理者（Supabase Auth連携）
 CREATE TABLE store_admins (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   store_id UUID REFERENCES stores(id) ON DELETE CASCADE NOT NULL,

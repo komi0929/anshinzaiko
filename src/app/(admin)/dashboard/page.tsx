@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getOrderAlerts, getMyStore } from "@/app/actions";
-import { buildAffiliateUrl, buildMailtoUrl } from "@/lib/utils";
+import { getOrderAlerts, getMyStore, getOrderUrl } from "@/app/actions";
+import { buildMailtoUrl } from "@/lib/utils";
 import {
   AlertTriangle,
   ExternalLink,
@@ -41,6 +41,24 @@ interface StoreData {
   staff_token: string;
 }
 
+// Determine button label from URL (client-side, no secrets involved)
+function getButtonLabel(url: string): string {
+  try {
+    const u = new URL(url);
+    if (
+      u.hostname.includes("amazon.co.jp") ||
+      u.hostname.includes("amazon.com") ||
+      u.hostname.includes("amzn.to") ||
+      u.hostname.includes("amzn.asia")
+    )
+      return "Amazonで発注する";
+    if (u.hostname.includes("rakuten.co.jp")) return "楽天市場で発注する";
+  } catch {
+    // ignore
+  }
+  return "発注する";
+}
+
 export default function DashboardPage() {
   const [alerts, setAlerts] = useState<OrderAlertItem[]>([]);
   const [store, setStore] = useState<StoreData | null>(null);
@@ -66,16 +84,13 @@ export default function DashboardPage() {
     }
   };
 
-  const handleOrder = (alert: OrderAlertItem) => {
+  const handleOrder = async (alert: OrderAlertItem) => {
     const mat = alert.material;
 
     if (mat.supplier_url) {
-      const url = buildAffiliateUrl(
-        mat.supplier_url,
-        process.env.NEXT_PUBLIC_AFFILIATE_AMAZON_TAG || "",
-        process.env.NEXT_PUBLIC_AFFILIATE_RAKUTEN_ID || ""
-      );
-      window.open(url, "_blank");
+      // Server-side URL rewriting (affiliate IDs never leave the server)
+      const url = await getOrderUrl(mat.supplier_url);
+      window.open(url, "_blank", "noopener,noreferrer");
     } else if (mat.supplier_email) {
       const mailtoUrl = buildMailtoUrl(
         mat.supplier_email,
@@ -219,7 +234,7 @@ export default function DashboardPage() {
                       className="btn btn-primary gap-1.5"
                     >
                       <ShoppingCart className="w-4 h-4" />
-                      注文する
+                      {getButtonLabel(alert.material.supplier_url)}
                       <ExternalLink className="w-3 h-3" />
                     </button>
                   ) : alert.material.supplier_email ? (
@@ -228,7 +243,7 @@ export default function DashboardPage() {
                       className="btn btn-success gap-1.5"
                     >
                       <Mail className="w-4 h-4" />
-                      メールで注文
+                      メールで発注
                     </button>
                   ) : (
                     <span className="text-xs text-[var(--color-text-muted)]">

@@ -1,37 +1,4 @@
-// Utility functions for affiliate URL building and mailto generation
-// These are NOT server actions - they run on both client and server
-
-export function buildAffiliateUrl(
-  originalUrl: string,
-  amazonTag: string,
-  rakutenId: string
-): string {
-  if (!originalUrl) return "";
-
-  try {
-    const url = new URL(originalUrl);
-
-    // Amazon
-    if (url.hostname.includes("amazon")) {
-      if (amazonTag) {
-        url.searchParams.set("tag", amazonTag);
-      }
-      return url.toString();
-    }
-
-    // Rakuten
-    if (url.hostname.includes("rakuten")) {
-      if (rakutenId) {
-        url.searchParams.set("af_id", rakutenId);
-      }
-      return url.toString();
-    }
-
-    return originalUrl;
-  } catch {
-    return originalUrl;
-  }
-}
+// Utility: mailto URL generation (client-safe, no secrets)
 
 export function buildMailtoUrl(
   email: string,

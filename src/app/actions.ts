@@ -632,4 +632,80 @@ export async function updateStoreSettings(data: {
   return { success: true };
 }
 
+// ============================================
+// Dynamic URL Rewriting (Server-Side Only)
+// Affiliate IDs are read from SYSTEM_* env vars
+// and NEVER exposed to the client JavaScript bundle.
+// ============================================
 
+function isAmazonUrl(url: string): boolean {
+  try {
+    const u = new URL(url);
+    return (
+      u.hostname.includes("amazon.co.jp") ||
+      u.hostname.includes("amazon.com") ||
+      u.hostname.includes("amzn.to") ||
+      u.hostname.includes("amzn.asia")
+    );
+  } catch {
+    return false;
+  }
+}
+
+function isRakutenUrl(url: string): boolean {
+  try {
+    const u = new URL(url);
+    return u.hostname.includes("rakuten.co.jp");
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Server Action: Rewrites a supplier URL with system affiliate tags.
+ * Amazon: appends/overwrites ?tag= parameter.
+ * Rakuten: rebuilds URL via hb.afl.rakuten.co.jp redirect format.
+ * Others: returns original URL unchanged.
+ */
+export async function getOrderUrl(supplierUrl: string): Promise<string> {
+  if (!supplierUrl) return "";
+
+  const amazonTag = process.env.SYSTEM_AMAZON_AFFILIATE_TAG || "";
+  const rakutenId = process.env.SYSTEM_RAKUTEN_AFFILIATE_ID || "";
+
+  try {
+    if (isAmazonUrl(supplierUrl)) {
+      if (amazonTag) {
+        const u = new URL(supplierUrl);
+        u.searchParams.set("tag", amazonTag); // Force overwrite
+        return u.toString();
+      }
+      return supplierUrl;
+    }
+
+    if (isRakutenUrl(supplierUrl)) {
+      if (rakutenId) {
+        const encodedUrl = encodeURIComponent(supplierUrl);
+        return `https://hb.afl.rakuten.co.jp/ichiba/${rakutenId}/?pc=${encodedUrl}`;
+      }
+      return supplierUrl;
+    }
+
+    // Other URLs: pass through unchanged
+    return supplierUrl;
+  } catch {
+    return supplierUrl;
+  }
+}
+
+/**
+ * Server Action: Returns the appropriate button label for a supplier URL.
+ * "Amazonで発注する" / "楽天市場で発注する" / "発注する"
+ */
+export async function getOrderButtonLabel(supplierUrl: string): Promise<string> {
+  if (!supplierUrl) return "発注する";
+
+  if (isAmazonUrl(supplierUrl)) return "Amazonで発注する";
+  if (isRakutenUrl(supplierUrl)) return "楽天市場で発注する";
+  return "発注する";
+}

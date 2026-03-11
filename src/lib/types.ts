@@ -4,8 +4,6 @@ export interface Store {
   id: string;
   name: string;
   staff_token: string;
-  affiliate_amazon_tag: string;
-  affiliate_rakuten_id: string;
   created_at: string;
 }
 

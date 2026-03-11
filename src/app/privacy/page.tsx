@@ -39,8 +39,8 @@ export default function PrivacyPage() {
           </div>
 
           <div>
-            <h2 className="text-lg font-bold text-[var(--color-text-primary)] mb-2">5. アフィリエイトリンク</h2>
-            <p>本サービスでは、材料購入時のURLにアフィリエイトパラメータが自動付与されます。これはユーザーの個人情報とは関連せず、サービスの運営費用に充てられます。</p>
+            <h2 className="text-lg font-bold text-[var(--color-text-primary)] mb-2">5. 外部サイトへのリンク</h2>
+            <p>本サービスには、材料の購入先として外部サイトへのリンクが含まれる場合があります。外部サイトにおける個人情報の取扱いは、各サイトのプライバシーポリシーに準拠します。</p>
           </div>
 
           <div>
