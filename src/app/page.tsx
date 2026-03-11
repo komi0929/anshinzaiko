@@ -126,7 +126,7 @@ export default function HomePage() {
               プライバシーポリシー
             </Link>
           </div>
-          <p>© 2026 Anshin Zaiko</p>
+          <p>© 2026 株式会社ヒトコト</p>
         </div>
       </footer>
     </div>
