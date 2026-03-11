@@ -167,9 +167,12 @@ export default function SettingsPage() {
           <h2 className="font-bold text-lg mb-3 flex items-center gap-2">
             <Users className="w-5 h-5 text-[var(--color-text-muted)]" />
             管理者メンバー
+            <span className="text-xs font-normal text-[var(--color-text-muted)] ml-2">
+              ({admins.length} / 3名)
+            </span>
           </h2>
           <p className="text-xs text-[var(--color-text-secondary)] mb-4">
-            このお店を一緒に管理できるメンバーを招待できます。招待する方は先にアカウントを作成してもらってください。
+            このお店を一緒に管理できるメンバーを招待できます（最大3名）。招待する方は先にアカウントを作成してもらってください。
           </p>
 
           {/* Current admins */}
@@ -206,29 +209,35 @@ export default function SettingsPage() {
             ))}
           </div>
 
-          {/* Invite form */}
-          <div className="flex items-center gap-2">
-            <input
-              className="input flex-1"
-              placeholder="メールアドレスを入力..."
-              type="email"
-              value={inviteEmail}
-              onChange={(e) => setInviteEmail(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleInvite()}
-            />
-            <button
-              onClick={handleInvite}
-              disabled={inviting || !inviteEmail.trim()}
-              className="btn btn-primary gap-1.5 flex-shrink-0"
-            >
-              {inviting ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <UserPlus className="w-4 h-4" />
-              )}
-              招待する
-            </button>
-          </div>
+          {/* Invite form (show only if under limit) */}
+          {admins.length < 3 ? (
+            <div className="flex items-center gap-2">
+              <input
+                className="input flex-1"
+                placeholder="メールアドレスを入力..."
+                type="email"
+                value={inviteEmail}
+                onChange={(e) => setInviteEmail(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleInvite()}
+              />
+              <button
+                onClick={handleInvite}
+                disabled={inviting || !inviteEmail.trim()}
+                className="btn btn-primary gap-1.5 flex-shrink-0"
+              >
+                {inviting ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <UserPlus className="w-4 h-4" />
+                )}
+                招待する
+              </button>
+            </div>
+          ) : (
+            <p className="text-xs text-[var(--color-text-muted)] bg-[var(--color-surface-dim)] px-4 py-3 rounded-xl">
+              管理者は最大3名までです。追加するには既存の管理者を削除してください。
+            </p>
+          )}
           {inviteError && (
             <p className="text-xs text-red-500 mt-2">{inviteError}</p>
           )}

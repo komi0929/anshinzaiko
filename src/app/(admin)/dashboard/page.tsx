@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getOrderAlerts, getMyStore, getOrderUrl } from "@/app/actions";
+import { getOrderAlerts, getMyStore, getOrderUrl, getLatestCheckSession } from "@/app/actions";
 import { buildMailtoUrl } from "@/lib/utils";
 import {
   AlertTriangle,
@@ -12,6 +12,7 @@ import {
   TrendingDown,
   Loader2,
   ChefHat,
+  ClipboardCheck,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -41,6 +42,12 @@ interface StoreData {
   staff_token: string;
 }
 
+interface CheckSession {
+  staff_name: string;
+  completed_at: string;
+  checked_material_ids: string[];
+}
+
 // Determine button label from URL (client-side, no secrets involved)
 function getButtonLabel(url: string): string {
   try {
@@ -62,6 +69,7 @@ function getButtonLabel(url: string): string {
 export default function DashboardPage() {
   const [alerts, setAlerts] = useState<OrderAlertItem[]>([]);
   const [store, setStore] = useState<StoreData | null>(null);
+  const [lastCheck, setLastCheck] = useState<CheckSession | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -71,12 +79,14 @@ export default function DashboardPage() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [alertsData, storeData] = await Promise.all([
+      const [alertsData, storeData, checkData] = await Promise.all([
         getOrderAlerts(),
         getMyStore(),
+        getLatestCheckSession(),
       ]);
       setAlerts(alertsData as OrderAlertItem[]);
       setStore(storeData as StoreData | null);
+      setLastCheck(checkData as CheckSession | null);
     } catch (e) {
       console.error(e);
     } finally {
@@ -158,6 +168,37 @@ export default function DashboardPage() {
                   コピー
                 </button>
               </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Last Check Session Card */}
+      {lastCheck && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="card p-5 bg-gradient-to-r from-green-50 to-blue-50 border-green-200"
+        >
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center flex-shrink-0">
+              <ClipboardCheck className="w-5 h-5 text-green-600" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-bold text-sm">✅ 最新の在庫チェック</h3>
+              <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
+                <strong>{lastCheck.staff_name}</strong>さんが
+                {lastCheck.checked_material_ids?.length || 0}件の材料をチェックしました
+              </p>
+              <p className="text-xs text-[var(--color-text-muted)] mt-1">
+                {new Date(lastCheck.completed_at).toLocaleString("ja-JP", {
+                  month: "short",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </p>
             </div>
           </div>
         </motion.div>

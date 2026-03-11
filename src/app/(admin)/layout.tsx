@@ -11,6 +11,7 @@ import {
   Settings,
   LogOut,
   ChefHat,
+  CookingPot,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
@@ -18,6 +19,7 @@ import { useRouter } from "next/navigation";
 const navItems = [
   { href: "/dashboard", label: "ホーム", icon: LayoutDashboard },
   { href: "/materials", label: "材料リスト", icon: Package },
+  { href: "/recipes", label: "仕込みレシピ", icon: CookingPot },
   { href: "/products", label: "商品メニュー", icon: ShoppingCart },
   { href: "/staff", label: "スタッフ", icon: Users },
   { href: "/locations", label: "保管場所", icon: MapPin },

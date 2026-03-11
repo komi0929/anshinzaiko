@@ -209,8 +209,140 @@ export async function deleteProduct(id: string) {
 }
 
 // ============================================
-// Recipe Items
+// Recipes (仕込みレシピ) CRUD
 // ============================================
+export async function getRecipes() {
+  const supabase = await createClient();
+  if (!supabase) return [];
+  const store = await getMyStore();
+  if (!store) return [];
+
+  const { data } = await supabase
+    .from("recipes")
+    .select("*, recipe_materials(*, material:materials(name, unit_cost, unit))")
+    .eq("store_id", store.id)
+    .order("name");
+
+  return data || [];
+}
+
+export async function createRecipe(formData: {
+  name: string;
+  batch_yield: number;
+  yield_unit: string;
+}) {
+  const supabase = await createClient();
+  if (!supabase) return { success: false, error: "Not authenticated" };
+  const store = await getMyStore();
+  if (!store) return { success: false, error: "Store not found" };
+
+  const { data, error } = await supabase
+    .from("recipes")
+    .insert({ store_id: store.id, ...formData })
+    .select()
+    .single();
+
+  if (error) return { success: false, error: error.message };
+  return { success: true, data };
+}
+
+export async function updateRecipe(id: string, formData: {
+  name?: string;
+  batch_yield?: number;
+  yield_unit?: string;
+}) {
+  const supabase = await createClient();
+  if (!supabase) return { success: false, error: "Not authenticated" };
+
+  const { error } = await supabase.from("recipes").update(formData).eq("id", id);
+  if (error) return { success: false, error: error.message };
+  return { success: true };
+}
+
+export async function deleteRecipe(id: string) {
+  const supabase = await createClient();
+  if (!supabase) return { success: false, error: "Not authenticated" };
+
+  const { error } = await supabase.from("recipes").delete().eq("id", id);
+  if (error) return { success: false, error: error.message };
+  return { success: true };
+}
+
+// Recipe Materials (仕込みレシピの材料構成)
+export async function addRecipeMaterial(recipeId: string, materialId: string, quantity: number) {
+  const supabase = await createClient();
+  if (!supabase) return { success: false, error: "Not authenticated" };
+
+  const { error } = await supabase.from("recipe_materials").insert({
+    recipe_id: recipeId,
+    material_id: materialId,
+    quantity,
+  });
+
+  if (error) return { success: false, error: error.message };
+  return { success: true };
+}
+
+export async function removeRecipeMaterial(id: string) {
+  const supabase = await createClient();
+  if (!supabase) return { success: false, error: "Not authenticated" };
+
+  const { error } = await supabase.from("recipe_materials").delete().eq("id", id);
+  if (error) return { success: false, error: error.message };
+  return { success: true };
+}
+
+// ============================================
+// Product Components (商品構成: レシピ or サブ商品)
+// ============================================
+export async function getProductComponents(productId: string) {
+  const supabase = await createClient();
+  if (!supabase) return [];
+
+  const { data } = await supabase
+    .from("product_components")
+    .select("*, recipe:recipes(name, batch_yield, yield_unit), sub_product:products!product_components_sub_product_id_fkey(name, total_cost)")
+    .eq("product_id", productId);
+
+  return data || [];
+}
+
+export async function addProductComponent(productId: string, data: {
+  recipe_id?: string | null;
+  sub_product_id?: string | null;
+  portion_grams?: number | null;
+  multiplier?: number;
+}) {
+  const supabase = await createClient();
+  if (!supabase) return { success: false, error: "Not authenticated" };
+
+  const { error } = await supabase.from("product_components").insert({
+    product_id: productId,
+    recipe_id: data.recipe_id || null,
+    sub_product_id: data.sub_product_id || null,
+    portion_grams: data.portion_grams || null,
+    multiplier: data.multiplier || 1,
+  });
+
+  if (error) return { success: false, error: error.message };
+
+  // Recalculate cost
+  await recalculateProductCost(productId);
+  return { success: true };
+}
+
+export async function removeProductComponent(componentId: string, productId: string) {
+  const supabase = await createClient();
+  if (!supabase) return { success: false, error: "Not authenticated" };
+
+  const { error } = await supabase.from("product_components").delete().eq("id", componentId);
+  if (error) return { success: false, error: error.message };
+
+  await recalculateProductCost(productId);
+  return { success: true };
+}
+
+// Keep old recipe_items functions for backward compatibility
 export async function addRecipeItem(productId: string, data: {
   material_id?: string | null;
   sub_product_id?: string | null;
@@ -227,26 +359,45 @@ export async function addRecipeItem(productId: string, data: {
   });
 
   if (error) return { success: false, error: error.message };
-
-  // Recalculate cost
-  await recalculateProductCost(productId);
   return { success: true };
 }
 
-export async function removeRecipeItem(recipeItemId: string, productId: string) {
+export async function removeRecipeItem(recipeItemId: string, _productId: string) {
   const supabase = await createClient();
   if (!supabase) return { success: false, error: "Not authenticated" };
 
   const { error } = await supabase.from("recipe_items").delete().eq("id", recipeItemId);
   if (error) return { success: false, error: error.message };
-
-  await recalculateProductCost(productId);
   return { success: true };
 }
 
 // ============================================
-// Recursive Cost Calculation Engine
+// New Cost Calculation Engine (Batch-Based)
+// バッチ原価 = Σ(material.unit_cost × recipe_material.quantity)
+// 1gあたり原価 = バッチ原価 / batch_yield
+// 商品原価 = Σ(1g原価 × portion_grams) + Σ(sub_product.total_cost × multiplier)
 // ============================================
+async function calculateRecipeBatchCost(recipeId: string): Promise<number> {
+  const supabase = await createClient();
+  if (!supabase) return 0;
+
+  const { data: recipeMats } = await supabase
+    .from("recipe_materials")
+    .select("quantity, material:materials(unit_cost)")
+    .eq("recipe_id", recipeId);
+
+  if (!recipeMats) return 0;
+
+  let batchCost = 0;
+  for (const rm of recipeMats) {
+    const mat = rm.material as unknown as { unit_cost: number } | null;
+    if (mat) {
+      batchCost += Number(mat.unit_cost) * Number(rm.quantity);
+    }
+  }
+  return batchCost;
+}
+
 export async function recalculateProductCost(productId: string, visited: Set<string> = new Set()) {
   if (visited.has(productId)) return 0; // Circular reference guard
   visited.add(productId);
@@ -254,33 +405,28 @@ export async function recalculateProductCost(productId: string, visited: Set<str
   const supabase = await createClient();
   if (!supabase) return 0;
 
-  const { data: recipeItems } = await supabase
-    .from("recipe_items")
-    .select("*")
+  const { data: components } = await supabase
+    .from("product_components")
+    .select("*, recipe:recipes(batch_yield)")
     .eq("product_id", productId);
-
-  if (!recipeItems || recipeItems.length === 0) {
-    await supabase.from("products").update({ total_cost: 0, cost_ratio: 0 }).eq("id", productId);
-    return 0;
-  }
 
   let totalCost = 0;
 
-  for (const item of recipeItems) {
-    if (item.material_id) {
-      // Material-based: unit_cost * quantity
-      const { data: material } = await supabase
-        .from("materials")
-        .select("unit_cost")
-        .eq("id", item.material_id)
-        .single();
-      if (material) {
-        totalCost += Number(material.unit_cost) * Number(item.quantity);
+  if (components && components.length > 0) {
+    for (const comp of components) {
+      if (comp.recipe_id) {
+        // Recipe-based: batchCost * (portion_grams / batch_yield)
+        const batchCost = await calculateRecipeBatchCost(comp.recipe_id);
+        const batchYield = comp.recipe ? Number((comp.recipe as { batch_yield: number }).batch_yield) : 1;
+        const portionGrams = Number(comp.portion_grams || 0);
+        if (batchYield > 0 && portionGrams > 0) {
+          totalCost += batchCost * (portionGrams / batchYield);
+        }
+      } else if (comp.sub_product_id) {
+        // Sub-product: recursive
+        const subCost = await recalculateProductCost(comp.sub_product_id, new Set(visited));
+        totalCost += subCost * Number(comp.multiplier || 1);
       }
-    } else if (item.sub_product_id) {
-      // Sub-product: recursive calculation
-      const subCost = await recalculateProductCost(item.sub_product_id, new Set(visited));
-      totalCost += subCost * Number(item.quantity);
     }
   }
 
@@ -613,6 +759,105 @@ export async function updateInventory(
 }
 
 // ============================================
+// Inventory Check Sessions
+// ============================================
+
+export async function startCheckSession(token: string, staffName: string) {
+  const adminClient = createAdminClient();
+  const { data: store } = await adminClient
+    .from("stores")
+    .select("id")
+    .eq("staff_token", token)
+    .single();
+  if (!store) return null;
+
+  // Create a new session
+  const { data } = await adminClient
+    .from("inventory_check_sessions")
+    .insert({ store_id: store.id, staff_name: staffName })
+    .select()
+    .single();
+
+  return data;
+}
+
+export async function getActiveCheckSession(token: string, staffName: string) {
+  const adminClient = createAdminClient();
+  const { data: store } = await adminClient
+    .from("stores")
+    .select("id")
+    .eq("staff_token", token)
+    .single();
+  if (!store) return null;
+
+  // Find active (in_progress) session for this staff
+  const { data } = await adminClient
+    .from("inventory_check_sessions")
+    .select("*")
+    .eq("store_id", store.id)
+    .eq("staff_name", staffName)
+    .eq("status", "in_progress")
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  return data;
+}
+
+export async function markMaterialChecked(sessionId: string, materialId: string) {
+  const adminClient = createAdminClient();
+
+  // Get current session
+  const { data: session } = await adminClient
+    .from("inventory_check_sessions")
+    .select("checked_material_ids")
+    .eq("id", sessionId)
+    .single();
+
+  if (!session) return { success: false };
+
+  const currentIds: string[] = session.checked_material_ids || [];
+  if (currentIds.includes(materialId)) return { success: true };
+
+  const { error } = await adminClient
+    .from("inventory_check_sessions")
+    .update({ checked_material_ids: [...currentIds, materialId] })
+    .eq("id", sessionId);
+
+  return { success: !error };
+}
+
+export async function completeCheckSession(sessionId: string) {
+  const adminClient = createAdminClient();
+
+  const { error } = await adminClient
+    .from("inventory_check_sessions")
+    .update({ status: "completed", completed_at: new Date().toISOString() })
+    .eq("id", sessionId);
+
+  return { success: !error };
+}
+
+export async function getLatestCheckSession() {
+  const supabase = await createClient();
+  if (!supabase) return null;
+  const store = await getMyStore();
+  if (!store) return null;
+
+  const adminClient = createAdminClient();
+  const { data } = await adminClient
+    .from("inventory_check_sessions")
+    .select("*")
+    .eq("store_id", store.id)
+    .eq("status", "completed")
+    .order("completed_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  return data;
+}
+
+// ============================================
 // Store Settings
 // ============================================
 export async function updateStoreSettings(data: {
@@ -668,11 +913,26 @@ export async function getStoreAdmins() {
   }
 }
 
+const MAX_ADMINS = 3;
+
 export async function inviteStoreAdmin(email: string) {
   const supabase = await createClient();
   if (!supabase) return { success: false, error: "認証エラー" };
   const store = await getMyStore();
   if (!store) return { success: false, error: "店舗が見つかりません" };
+
+  // Check admin count limit
+  const { count } = await supabase
+    .from("store_admins")
+    .select("id", { count: "exact", head: true })
+    .eq("store_id", store.id);
+
+  if ((count ?? 0) >= MAX_ADMINS) {
+    return {
+      success: false,
+      error: `管理者は最大${MAX_ADMINS}名までです。追加するには既存の管理者を削除してください。`,
+    };
+  }
 
   // Find user by email via admin client
   const adminClient = createAdminClient();
@@ -700,11 +960,11 @@ export async function inviteStoreAdmin(email: string) {
     return { success: false, error: "このユーザーはすでに管理者として追加されています。" };
   }
 
-  // Add as admin
+  // Add as admin (all admins have equal permissions)
   const { error } = await supabase.from("store_admins").insert({
     store_id: store.id,
     user_id: targetUser.id,
-    role: "staff",
+    role: "admin",
   });
 
   if (error) return { success: false, error: error.message };
