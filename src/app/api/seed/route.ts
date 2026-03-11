@@ -19,15 +19,45 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "ログインしてください" }, { status: 401 });
   }
 
-  // Get user's store
-  const { data: admin } = await supabase
+  // Get user's store - if not found, create one automatically
+  let { data: admin } = await supabase
     .from("store_admins")
     .select("store_id")
     .eq("user_id", user.id)
-    .single();
+    .maybeSingle();
 
   if (!admin) {
-    return NextResponse.json({ error: "店舗が見つかりません" }, { status: 404 });
+    // Auto-create store for this user
+    const token =
+      crypto.randomUUID().replace(/-/g, "") +
+      crypto.randomUUID().replace(/-/g, "");
+    const { data: newStore, error: storeErr } = await supabase
+      .from("stores")
+      .insert({ name: "ヒトコトカフェ", staff_token: token })
+      .select("id")
+      .single();
+
+    if (storeErr || !newStore) {
+      return NextResponse.json({ error: "店舗作成失敗: " + storeErr?.message }, { status: 500 });
+    }
+
+    await supabase.from("store_admins").insert({
+      store_id: newStore.id,
+      user_id: user.id,
+      role: "admin",
+    });
+
+    // Create default locations
+    const defaultLocations = ["冷蔵庫A", "冷蔵庫B", "冷凍庫", "乾物棚", "その他"];
+    for (let i = 0; i < defaultLocations.length; i++) {
+      await supabase.from("locations").insert({
+        store_id: newStore.id,
+        name: defaultLocations[i],
+        sort_order: i,
+      });
+    }
+
+    admin = { store_id: newStore.id };
   }
 
   const storeId = admin.store_id;
