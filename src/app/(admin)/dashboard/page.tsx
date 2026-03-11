@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getOrderAlerts, getMyStore, getOrderUrl, getLatestCheckSession } from "@/app/actions";
+import { getDashboardData, getOrderUrl } from "@/app/actions";
 import { buildMailtoUrl } from "@/lib/utils";
 import {
   AlertTriangle,
@@ -79,14 +79,12 @@ export default function DashboardPage() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [alertsData, storeData, checkData] = await Promise.all([
-        getOrderAlerts(),
-        getMyStore(),
-        getLatestCheckSession(),
-      ]);
-      setAlerts(alertsData as OrderAlertItem[]);
-      setStore(storeData as StoreData | null);
-      setLastCheck(checkData as CheckSession | null);
+      const data = await getDashboardData();
+      if (data) {
+        setAlerts(data.alerts as OrderAlertItem[]);
+        setStore(data.store as unknown as StoreData);
+        setLastCheck(data.lastCheck as CheckSession | null);
+      }
     } catch (e) {
       console.error(e);
     } finally {

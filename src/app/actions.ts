@@ -2,32 +2,154 @@
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
+import { cache } from "react";
 
 // ============================================
-// Helper: get current user's store
+// Helper: get current user's store (cached per request)
+// React cache() deduplicates calls within the same server request,
+// eliminating redundant DB round-trips when multiple actions call getMyStore().
 // ============================================
-export async function getMyStore() {
+export const getMyStore = cache(async () => {
   const supabase = await createClient();
   if (!supabase) return null;
 
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
 
+  // Single query: join store_admins → stores
   const { data: admin } = await supabase
     .from("store_admins")
-    .select("store_id")
+    .select("store_id, stores(*)")
     .eq("user_id", user.id)
+    .limit(1)
     .single();
 
   if (!admin) return null;
+  return (admin as Record<string, unknown>).stores as Record<string, unknown> | null;
+});
 
-  const { data: store } = await supabase
-    .from("stores")
-    .select("*")
-    .eq("id", admin.store_id)
-    .single();
+// Fast store_id-only helper (also cached via getMyStore)
+async function getStoreId(): Promise<string | null> {
+  const store = await getMyStore();
+  return store ? (store.id as string) : null;
+}
 
-  return store;
+// ============================================
+// Integrated Data Fetching (1 Server Action = all page data)
+// Eliminates multiple Server Action round-trips per page.
+// ============================================
+
+export async function getDashboardData() {
+  const supabase = await createClient();
+  if (!supabase) return null;
+  const store = await getMyStore();
+  if (!store) return null;
+  const storeId = store.id as string;
+
+  const adminClient = createAdminClient();
+
+  // Parallel DB queries (1 network hop each, all in parallel)
+  const [materialsRes, inventoriesRes, checkSessionRes] = await Promise.all([
+    supabase
+      .from("materials")
+      .select("*, location:locations(*)")
+      .eq("store_id", storeId)
+      .gt("reorder_threshold", 0),
+    supabase
+      .from("inventory")
+      .select("*")
+      .eq("store_id", storeId),
+    adminClient
+      .from("inventory_check_sessions")
+      .select("*")
+      .eq("store_id", storeId)
+      .eq("status", "completed")
+      .order("completed_at", { ascending: false })
+      .limit(1)
+      .maybeSingle(),
+  ]);
+
+  const materials = materialsRes.data || [];
+  const inventories = inventoriesRes.data || [];
+  const inventoryMap = new Map(
+    inventories.map((inv: Record<string, unknown>) => [inv.material_id, inv])
+  );
+
+  const alerts = materials
+    .map((mat: Record<string, unknown>) => {
+      const inv = inventoryMap.get(mat.id) as Record<string, unknown> | undefined;
+      const currentCount = inv ? Number(inv.current_count) : 0;
+      const isPlenty = inv ? inv.is_plenty : false;
+      if (isPlenty) return null;
+      if (currentCount >= Number(mat.reorder_threshold)) return null;
+      return {
+        material: mat,
+        inventory: inv || null,
+        deficit: Number(mat.reorder_threshold) - currentCount,
+      };
+    })
+    .filter(Boolean);
+
+  return {
+    store,
+    alerts,
+    lastCheck: checkSessionRes.data || null,
+  };
+}
+
+export async function getMaterialsPageData() {
+  const supabase = await createClient();
+  if (!supabase) return null;
+  const store = await getMyStore();
+  if (!store) return null;
+  const storeId = store.id as string;
+
+  const [materialsRes, locationsRes] = await Promise.all([
+    supabase
+      .from("materials")
+      .select("*, location:locations(*)")
+      .eq("store_id", storeId)
+      .order("name"),
+    supabase
+      .from("locations")
+      .select("*")
+      .eq("store_id", storeId)
+      .order("sort_order"),
+  ]);
+
+  return {
+    materials: materialsRes.data || [],
+    locations: locationsRes.data || [],
+  };
+}
+
+export async function getSettingsPageData() {
+  const supabase = await createClient();
+  if (!supabase) return null;
+  const store = await getMyStore();
+  if (!store) return null;
+
+  const admins = await (async () => {
+    const { data } = await supabase
+      .from("store_admins")
+      .select("id, user_id, role, created_at")
+      .eq("store_id", store.id as string)
+      .order("created_at", { ascending: true });
+    if (!data || data.length === 0) return [];
+    try {
+      const adminClient = createAdminClient();
+      return await Promise.all(
+        data.map(async (a) => {
+          const { data: ud } = await adminClient.auth.admin.getUserById(a.user_id);
+          return { ...a, email: ud?.user?.email || "不明" };
+        })
+      );
+    } catch {
+      return data.map((a) => ({ ...a, email: "不明" }));
+    }
+  })();
+
+  return { store, admins };
 }
 
 // ============================================

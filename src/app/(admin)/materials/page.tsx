@@ -2,11 +2,10 @@
 
 import { useEffect, useState, useCallback } from "react";
 import {
-  getMaterials,
+  getMaterialsPageData,
   createMaterial,
   updateMaterial,
   deleteMaterial,
-  getLocations,
 } from "@/app/actions";
 import {
   Plus,
@@ -71,9 +70,11 @@ export default function MaterialsPage() {
 
   const loadData = useCallback(async () => {
     setLoading(true);
-    const [mats, locs] = await Promise.all([getMaterials(), getLocations()]);
-    setMaterials(mats as MaterialData[]);
-    setLocations(locs as LocationData[]);
+    const data = await getMaterialsPageData();
+    if (data) {
+      setMaterials(data.materials as MaterialData[]);
+      setLocations(data.locations as LocationData[]);
+    }
     setLoading(false);
   }, []);
 
