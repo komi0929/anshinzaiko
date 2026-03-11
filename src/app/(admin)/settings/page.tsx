@@ -6,32 +6,30 @@ import { Settings, Loader2, Save } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function SettingsPage() {
-  const [store, setStore] = useState<{id:string;name:string;staff_token:string;affiliate_amazon_tag:string;affiliate_rakuten_id:string} | null>(null);
+  const [store, setStore] = useState<{
+    id: string;
+    name: string;
+    staff_token: string;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [form, setForm] = useState({
-    name: "",
-    affiliate_amazon_tag: "",
-    affiliate_rakuten_id: "",
-  });
+  const [form, setForm] = useState({ name: "" });
   const [saved, setSaved] = useState(false);
 
   const loadData = useCallback(async () => {
     setLoading(true);
     const data = await getMyStore();
     if (data) {
-      const s = data as {id:string;name:string;staff_token:string;affiliate_amazon_tag:string;affiliate_rakuten_id:string};
+      const s = data as { id: string; name: string; staff_token: string };
       setStore(s);
-      setForm({
-        name: s.name,
-        affiliate_amazon_tag: s.affiliate_amazon_tag || "",
-        affiliate_rakuten_id: s.affiliate_rakuten_id || "",
-      });
+      setForm({ name: s.name });
     }
     setLoading(false);
   }, []);
 
-  useEffect(() => { loadData(); }, [loadData]);
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const handleSave = async () => {
     setSaving(true);
@@ -50,70 +48,73 @@ export default function SettingsPage() {
     );
   }
 
+  const staffUrl = store
+    ? `${typeof window !== "undefined" ? window.location.origin : ""}/s/${store.staff_token}`
+    : "";
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-extrabold">お店の設定 ⚙️</h1>
         <p className="text-[var(--color-text-secondary)] mt-1">
-          お店の名前やその他の設定ができます
+          お店の名前やスタッフ用URLの確認ができます
         </p>
       </div>
 
-      <div className="card p-6 space-y-6 max-w-2xl">
-        <div>
-          <label className="block text-sm font-medium mb-1.5">お店の名前</label>
-          <input
-            className="input"
-            value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-          />
-        </div>
-
-        <div className="p-4 bg-[var(--color-surface-dim)] rounded-xl space-y-4">
-          <div className="flex items-center gap-2">
-            <Settings className="w-4 h-4 text-[var(--color-text-muted)]" />
-            <h3 className="font-bold text-sm">💡 アフィリエイト設定（任意）</h3>
-          </div>
-          <p className="text-xs text-[var(--color-text-secondary)]">
-            材料の注文リンクがAmazon/楽天の場合、ここのIDが自動でつきます。
-            ご利用者さんに追加のご負担はありません。
-          </p>
+      <div className="max-w-2xl space-y-6">
+        {/* Store Name */}
+        <div className="card p-6">
+          <h2 className="font-bold text-lg mb-4 flex items-center gap-2">
+            <Settings className="w-5 h-5 text-[var(--color-text-muted)]" />
+            お店の基本情報
+          </h2>
           <div>
-            <label className="block text-sm font-medium mb-1.5">Amazon アフィリエイトタグ</label>
+            <label className="block text-sm font-medium mb-1.5">
+              お店の名前
+            </label>
             <input
               className="input"
-              placeholder="例: anshinzaiko-22"
-              value={form.affiliate_amazon_tag}
-              onChange={(e) => setForm({ ...form, affiliate_amazon_tag: e.target.value })}
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1.5">楽天 アフィリエイトID</label>
-            <input
-              className="input"
-              placeholder="例: abc123def"
-              value={form.affiliate_rakuten_id}
-              onChange={(e) => setForm({ ...form, affiliate_rakuten_id: e.target.value })}
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
             />
           </div>
         </div>
 
+        {/* Staff URL */}
         {store && (
-          <div className="p-4 bg-orange-50 rounded-xl">
-            <p className="text-sm font-medium mb-1">📱 スタッフ用のトークン</p>
-            <code className="text-xs break-all text-[var(--color-text-secondary)]">
-              {store.staff_token}
-            </code>
+          <div className="card p-6">
+            <h2 className="font-bold text-lg mb-3 flex items-center gap-2">
+              📱 スタッフ用のURL
+            </h2>
+            <p className="text-xs text-[var(--color-text-secondary)] mb-3">
+              このURLをスタッフさんに送ると、ログインなしですぐに在庫入力できます♪
+            </p>
+            <div className="flex items-center gap-2">
+              <code className="text-xs bg-[var(--color-surface-dim)] px-3 py-2 rounded-lg flex-1 truncate border border-[var(--color-border)]">
+                {staffUrl}
+              </code>
+              <button
+                onClick={() => navigator.clipboard.writeText(staffUrl)}
+                className="btn btn-secondary text-xs px-3 py-2 flex-shrink-0"
+              >
+                コピー
+              </button>
+            </div>
           </div>
         )}
 
+        {/* Save Button */}
         <div className="flex items-center gap-3">
           <button
             onClick={handleSave}
             disabled={saving}
-            className="btn btn-primary"
+            className="btn btn-primary px-6"
           >
-            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+            {saving ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Save className="w-4 h-4" />
+            )}
             保存する
           </button>
           {saved && (

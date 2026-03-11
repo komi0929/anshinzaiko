@@ -617,8 +617,6 @@ export async function updateInventory(
 // ============================================
 export async function updateStoreSettings(data: {
   name?: string;
-  affiliate_amazon_tag?: string;
-  affiliate_rakuten_id?: string;
 }) {
   const supabase = await createClient();
   if (!supabase) return { success: false, error: "Not authenticated" };

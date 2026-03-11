@@ -39,8 +39,6 @@ interface StoreData {
   id: string;
   name: string;
   staff_token: string;
-  affiliate_amazon_tag: string;
-  affiliate_rakuten_id: string;
 }
 
 export default function DashboardPage() {
@@ -74,8 +72,8 @@ export default function DashboardPage() {
     if (mat.supplier_url) {
       const url = buildAffiliateUrl(
         mat.supplier_url,
-        store?.affiliate_amazon_tag || process.env.NEXT_PUBLIC_AFFILIATE_AMAZON_TAG || "",
-        store?.affiliate_rakuten_id || process.env.NEXT_PUBLIC_AFFILIATE_RAKUTEN_ID || ""
+        process.env.NEXT_PUBLIC_AFFILIATE_AMAZON_TAG || "",
+        process.env.NEXT_PUBLIC_AFFILIATE_RAKUTEN_ID || ""
       );
       window.open(url, "_blank");
     } else if (mat.supplier_email) {
